@@ -1,5 +1,6 @@
 {
   "expo": {
+    "plugins": ["@config-plugins/react-native-webrtc"],
     "name": "1on1-courses",
     "slug": "1on1-courses",
     "version": "1.0.0",
