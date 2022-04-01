@@ -4,6 +4,7 @@ import Colors from "../constants/Colors";
 import * as React from "react";
 import TestScreen from "../screens/TestScreen";
 import {StyleSheet, Text} from "react-native";
+import CoursesStackNavigator from "./CoursesStackNavigator";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -16,12 +17,11 @@ export default function BottomTabNavigator() {
                 tabBarActiveTintColor: Colors.tabIconSelected, tabBarInactiveTintColor: Colors.tabIconDefault,
                 tabBarStyle: {
                     paddingVertical: 3,
-                    backgroundColor: Colors.background
                 }
             }}>
             <BottomTab.Screen
                 name="Courses"
-                component={TestScreen}
+                component={CoursesStackNavigator}
                 options={({ navigation }) => ({
                     headerShown: false,
                     tabBarIcon: ({color}) => <FontAwesome5 name="graduation-cap" size={24} color={color} />,

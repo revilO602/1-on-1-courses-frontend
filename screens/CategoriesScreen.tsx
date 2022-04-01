@@ -1,10 +1,11 @@
+import Categories from "../components/Categories";
 import {View, Text, StyleSheet} from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from "../constants/Colors";
-export default function TestScreen() {
+
+export default function CategoriesScreen() {
     return (
         <View style={styles.container} >
-            <Text>Hello world</Text>
+            <Categories/>
         </View>
     );
 }
