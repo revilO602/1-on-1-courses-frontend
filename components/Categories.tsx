@@ -2,6 +2,7 @@ import {View, StyleSheet, Text, ActivityIndicator, FlatList} from "react-native"
 import {useEffect, useState} from "react";
 import Server from "../constants/Server";
 import { encode } from "base-64";
+import CategoryButton from "./CategoryButton";
 
 export default function Categories({ navigation }) {
     const [isLoading, setLoading] = useState(true);
@@ -31,10 +32,11 @@ export default function Categories({ navigation }) {
         <View style={styles.container} >
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
+                    numColumns={3}
                     data={categories}
                     keyExtractor={({ id }, index) => id}
                     renderItem={({ item }) => (
-                        <View style={styles.category}><Text> {item.name} </Text></View>
+                        <CategoryButton navigation={navigation} id={item.id} name={item.name}/>
                     )}
                 />
             )}
@@ -45,12 +47,7 @@ export default function Categories({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         padding: '3%',
     },
-    category: {
-        flexBasis: '33%'
-    }
 });

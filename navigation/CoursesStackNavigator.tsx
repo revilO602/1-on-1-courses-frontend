@@ -7,10 +7,10 @@ const Stack = createNativeStackNavigator();
 export default function CoursesStackNavigator() {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="RegisterScreen" component={CategoriesScreen}
-                          options={{ title: 'Courses' }}/>
-            <Stack.Screen name="ForgotPasswordScreen" component={TestScreen}
-                          options={{ title: 'some courses' }}/>
+            <Stack.Screen name="CategoriesScreen" component={CategoriesScreen}
+                          options={{ title: 'Categories' }}/>
+            {/*<Stack.Screen name="ListCourseScreen" component={ListCourseScreen}*/}
+            {/*              options={{ title: 'some courses' }}/>*/}
         </Stack.Navigator>
     );
 }
