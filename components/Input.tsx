@@ -2,12 +2,13 @@ import {TextInput, StyleSheet, View, Text} from "react-native";
 import * as React from "react";
 import Colors from "../constants/Colors";
 
-export default function Input({placeholder, value, onBlur, onChangeText}) {
+export default function Input({placeholder, value, onBlur, onChangeText, label, secureTextEntry=false}) {
     return(
         <View style={styles.container}>
-            <Text style={styles.label}>Password</Text>
+            <Text style={styles.label}>{label}</Text>
             <TextInput
                 placeholder={placeholder}
+                secureTextEntry={secureTextEntry}
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChangeText}
@@ -19,13 +20,12 @@ export default function Input({placeholder, value, onBlur, onChangeText}) {
 
 const styles = StyleSheet.create({
     container: {
-        marginVertical: 5,
-        marginHorizontal: 5,
-        paddingVertical: 2,
-        paddingHorizontal: 2,
+        marginVertical: 3,
+        marginHorizontal: 22,
+
     },
     input:{
-        paddingVertical: 2,
+        paddingVertical: 5,
         paddingHorizontal: 10,
         alignItems: 'flex-start',
         justifyContent: 'center',

@@ -36,9 +36,7 @@ export default function RegisterScreen(){
     return (
             <KeyboardAwareScrollView
                 contentContainerStyle={[styles.container, {paddingTop: insets.top}]}
-                enableOnAndroid={true}
-                extraScrollHeight={0}
-                extraHeight={10}
+            enableOnAndroid
             >
                 <Controller
                     control={control}
@@ -46,54 +44,7 @@ export default function RegisterScreen(){
                     render={({field: {onChange, value, onBlur}}) => (
                         <Input
                             placeholder="Enter first name..."
-                            value={value}
-                            onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
-                        />
-                    )}
-                />
-                <Controller
-                    control={control}
-                    name="firstName"
-                    render={({field: {onChange, value, onBlur}}) => (
-                        <Input
-                            placeholder="Enter first name..."
-                            value={value}
-                            onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
-                        />
-                    )}
-                />
-                <Controller
-                    control={control}
-                    name="firstName"
-                    render={({field: {onChange, value, onBlur}}) => (
-                        <Input
-                            placeholder="Enter first name..."
-                            value={value}
-                            onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
-                        />
-                    )}
-                />
-                <Controller
-                    control={control}
-                    name="firstName"
-                    render={({field: {onChange, value, onBlur}}) => (
-                        <Input
-                            placeholder="Enter first name..."
-                            value={value}
-                            onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
-                        />
-                    )}
-                />
-                <Controller
-                    control={control}
-                    name="firstName"
-                    render={({field: {onChange, value, onBlur}}) => (
-                        <Input
-                            placeholder="Enter first name..."
+                            label={"First name"}
                             value={value}
                             onBlur={onBlur}
                             onChangeText={value => onChange(value)}
@@ -105,6 +56,7 @@ export default function RegisterScreen(){
                     name="lastName"
                     render={({field: {onChange, value, onBlur}}) => (
                         <Input
+                            label={"Last name"}
                             placeholder="Enter last name..."
                             value={value}
                             onBlur={onBlur}
@@ -117,6 +69,7 @@ export default function RegisterScreen(){
                     name="email"
                     render={({field: {onChange, value, onBlur}}) => (
                         <Input
+                            label={"Email"}
                             placeholder="Enter email..."
                             value={value}
                             onBlur={onBlur}
@@ -129,7 +82,9 @@ export default function RegisterScreen(){
                     name="password"
                     render={({field: {onChange, value, onBlur}}) => (
                         <Input
+                            label={"Password"}
                             placeholder="Enter password ..."
+                            secureTextEntry={true}
                             value={value}
                             onBlur={onBlur}
                             onChangeText={value => onChange(value)}
@@ -141,7 +96,9 @@ export default function RegisterScreen(){
                     name="confirmPassword"
                     render={({field: {onChange, value, onBlur}}) => (
                         <Input
+                            label={"Password confirmation"}
                             placeholder="Enter password again ..."
+                            secureTextEntry={true}
                             value={value}
                             onBlur={onBlur}
                             onChangeText={value => onChange(value)}
@@ -158,10 +115,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: Colors.background,
-    },
-    formContainer: {
-        padding: 8,
-        flex: 1,
     },
     text: {
         fontSize: 15,
