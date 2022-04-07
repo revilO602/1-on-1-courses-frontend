@@ -47,7 +47,7 @@ export default function RegisterScreen(){
                             label={"First name"}
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
                         />
                     )}
                 />
@@ -60,7 +60,7 @@ export default function RegisterScreen(){
                             placeholder="Enter last name..."
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
                         />
                     )}
                 />
@@ -73,7 +73,7 @@ export default function RegisterScreen(){
                             placeholder="Enter email..."
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
                         />
                     )}
                 />
@@ -87,7 +87,7 @@ export default function RegisterScreen(){
                             secureTextEntry={true}
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
                         />
                     )}
                 />
@@ -101,7 +101,7 @@ export default function RegisterScreen(){
                             secureTextEntry={true}
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
                         />
                     )}
                 />
@@ -122,5 +122,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: Colors.text,
+    },
+    button: {
+        color: Colors.text, 
     }
 });
