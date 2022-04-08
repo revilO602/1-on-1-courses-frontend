@@ -1,0 +1,1 @@
+declare module "react_native-calendar_timetable"
