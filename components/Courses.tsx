@@ -9,7 +9,8 @@ export default function Courses() {
             </Text>
             <ScrollView>
                 <View style = {styles.listItem}>
-                    <Text>A course (will add actual names later)</Text>
+                    <Text style={{width: '70%'}}>A course (will add actual names later)</Text>
+                    <Button title={"Learn More"} onPress={}/>
                 </View>
             </ScrollView>
         </View>
@@ -28,13 +29,15 @@ const styles = StyleSheet.create({
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: Colors.text,
+        color: Colors.text
     },
     listItem: {
         padding: 10,
         marginVertical: 10,
         backgroundColor: Colors.background,
         borderColor: 'black',
-        borderWidth: 1
+        borderWidth: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 });
