@@ -7,13 +7,13 @@ import CategoryButton from "./CategoryButton";
 import Course from "./Course";
 
 
-export default function Courses({ navigation, route }) {
+export default function Courses({ navigation, props }) {
     const [isLoading, setLoading] = useState(true);
     const [courses, setCourses] = useState([]);
 
     const fetchCourses = async () => {
         try {
-            const response = await fetch(`${Server.url}/courses/${route.params.id}`,{
+            const response = await fetch(`${Server.url}/courses/${props.id}`,{
                 headers: new Headers({
                     'Authorization': 'Basic '+ encode('teacher1@login.sk:heslo'),
                 }),
@@ -39,7 +39,7 @@ export default function Courses({ navigation, route }) {
             {isLoading ? <ActivityIndicator/> : (
                 <View>
                     <Text style = {styles.text}>
-                        Current Courses for - {route.params.name} [{route.params.id}]
+                        Current Courses for - {props.name} [{props.id}]
                     </Text>
                     <FlatList
                         data={courses}
