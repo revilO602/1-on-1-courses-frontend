@@ -2,9 +2,10 @@ import {View, StyleSheet, Text, Pressable,} from "react-native";
 import Colors from "../constants/Colors";
 
 export default function CategoryButton({ navigation, name, id }) {
-    const onPress = () =>{
-        // go to category courses
+    const onPress = () => {
+        navigation.navigate('Courses', { name: name, id: id })
     }
+
     return (
         <Pressable style={({ pressed }) => [
             {

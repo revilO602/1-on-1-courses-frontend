@@ -2,10 +2,10 @@ import Categories from "../components/Categories";
 import {View, Text, StyleSheet} from "react-native";
 import Colors from "../constants/Colors";
 
-export default function CategoriesScreen() {
+export default function CategoriesScreen({ navigation }) {
     return (
         <View style={styles.container} >
-            <Categories/>
+            <Categories navigation={navigation}/>
         </View>
     );
 }

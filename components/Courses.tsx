@@ -1,18 +1,54 @@
-import {View, Text, StyleSheet, TextInput, Button, ScrollView} from "react-native";
+import {View, Text, StyleSheet, TextInput, Button, ScrollView, ActivityIndicator, FlatList} from "react-native";
 import Colors from "../constants/Colors";
+import {useEffect, useState} from "react";
+import { encode } from "base-64";
+import Server from "../constants/Server";
+import CategoryButton from "./CategoryButton";
+import Course from "./Course";
 
-export default function Courses() {
+
+export default function Courses({ navigation, route }) {
+    const [isLoading, setLoading] = useState(true);
+    const [courses, setCourses] = useState([]);
+
+    const fetchCourses = async () => {
+        try {
+            const response = await fetch(`${Server.url}/courses/${route.params.id}`,{
+                headers: new Headers({
+                    'Authorization': 'Basic '+ encode('teacher1@login.sk:heslo'),
+                }),
+            });
+            if(response.status === 200) { // neviem ci to je spravne z hladiska poradia async operacii
+                const json = await response.json();
+                console.log([json])
+                setCourses([json]); // Treba fixnut endpoint aby vracal pole
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchCourses()
+    }, []);
+
     return (
         <View>
-            <Text style = {styles.text}>
-                Current Courses
-            </Text>
-            <ScrollView>
-                <View style = {styles.listItem}>
-                    <Text style={{width: '70%'}}>A course (will add actual names later)</Text>
-                    <Button title={"Learn More"} onPress={}/>
+            {isLoading ? <ActivityIndicator/> : (
+                <View>
+                    <Text style = {styles.text}>
+                        Current Courses for - {route.params.name} [{route.params.id}]
+                    </Text>
+                    <FlatList
+                        data={courses}
+                        renderItem={({ item }) => (
+                            <Course navigation={navigation} course={item}/>
+                        )}
+                    />
                 </View>
-            </ScrollView>
+            )}
         </View>
     );
 }

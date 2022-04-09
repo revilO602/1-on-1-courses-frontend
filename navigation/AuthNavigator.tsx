@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import RegisterScreen from "../screens/RegisterScreen";
 import * as React from "react";
 import BottomTabNavigator from "./BottomTabNavigator";
+import CoursesStackNavigator from "./CoursesStackNavigator";
 import TestScreen from "../screens/TestScreen";
 
 const Stack = createNativeStackNavigator();
@@ -19,7 +20,11 @@ export default function AuthNavigator() {
                 }} />
             ) : (
                 <>
-                    <Stack.Screen name="RegisterScreen" component={RegisterScreen}
+                    {/*<Stack.Screen name="RegisterScreen" component={RegisterScreen}*/}
+                    {/*              options={{*/}
+                    {/*                  headerShown: false*/}
+                    {/*              }}/>*/}
+                    <Stack.Screen name="RegisterScreen" component={CoursesStackNavigator}
                                   options={{
                                       headerShown: false
                                   }}/>
