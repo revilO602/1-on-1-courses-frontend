@@ -6,6 +6,7 @@ export default function Course({ navigation, course }) {
     const onPress = () => {
         console.log(course)
         //TODO tuto idem dorobit CourseDetail screen
+        navigation.navigate('CourseDetailScreen', { course })
     }
 
     return (
