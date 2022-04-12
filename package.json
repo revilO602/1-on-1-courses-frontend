@@ -11,6 +11,7 @@
   "dependencies": {
     "@config-plugins/react-native-webrtc": "^2.1.1",
     "@hookstate/core": "^3.0.13",
+    "@react-native-picker/picker": "2.2.1",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.2",
@@ -22,10 +23,10 @@
     "react-dom": "17.0.1",
     "react-hook-form": "^7.29.0",
     "react-native": "0.64.3",
-    "react-native-calendar-timetable": "^0.4.5",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
+    "react-native-timetable": "^1.0.4",
     "react-native-web": "0.17.1",
     "react-native-webrtc": "^1.98.0"
   },

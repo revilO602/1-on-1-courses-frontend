@@ -1,19 +1,15 @@
 import * as React from 'react';
 import {
   Text,
-  View,
   StyleSheet,
-  Button,
   Alert,
-  ScrollView, TextInput, Pressable, KeyboardAvoidingView, Platform,
+  Pressable
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import Colors from "../constants/Colors";
 import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
-import { useHeaderHeight } from '@react-navigation/elements';
 import Server from "../constants/Server";
 import Errors from "../components/Errors";
 import { encode } from "base-64";
@@ -124,7 +120,7 @@ export default function LoginScreen({navigation}){
         }}
       />
 
-      <SubmitButton text={"Submit"} style={[styles.button]} onPress={handleSubmit(onSubmit)}/>
+      <SubmitButton text={"Submit"} onPress={handleSubmit(onSubmit)}/>
       <Pressable style={{marginVertical: 5}} onPress={()=>navigation.navigate("RegisterScreen")}>
         <Text style={styles.link}> Click here to register </Text>
       </Pressable>

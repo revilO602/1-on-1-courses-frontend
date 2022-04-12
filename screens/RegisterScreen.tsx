@@ -182,7 +182,7 @@ export default function RegisterScreen({navigation}){
                     }}
 
                 />
-                <SubmitButton text={"Submit"} style={[styles.button]} onPress={handleSubmit(onSubmit)}/>
+                <SubmitButton text={"Submit"} onPress={handleSubmit(onSubmit)}/>
                 {errors && (
                   <Errors errors={extractFrontendErrors()}/>
                 )}

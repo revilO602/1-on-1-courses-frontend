@@ -3,6 +3,7 @@ import TestScreen from "../screens/TestScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import CoursesScreen from "../screens/CoursesScreen";
 import CourseDetailScreen from "../screens/CourseDetailScreen";
+import CreateCourseScreen from "../screens/CreateCourseScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,8 @@ export default function CoursesStackNavigator() {
                           options={{ title: 'CourseDetailScreen' }}/>
             {/*<Stack.Screen name="ListCourseScreen" component={ListCourseScreen}*/}
             {/*              options={{ title: 'some courses' }}/>*/}
+          <Stack.Screen name="CreateCourseScreen" component={CreateCourseScreen}
+                        options={{ title: 'Create course' }}/>
         </Stack.Navigator>
     );
 }
