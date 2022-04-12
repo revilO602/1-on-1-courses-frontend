@@ -13,15 +13,15 @@ export default function Courses({ navigation, props }) {
 
     const fetchCourses = async () => {
         try {
-            const response = await fetch(`${Server.url}/courses/${props.id}`,{
+            const response = await fetch(`${Server.url}/courses/?categoryId=${props.id}`,{
                 headers: new Headers({
                     'Authorization': 'Basic '+ encode('teacher1@login.sk:heslo'),
                 }),
             });
             if(response.status === 200) { // neviem ci to je spravne z hladiska poradia async operacii
                 const json = await response.json();
-                console.log([json])
-                setCourses([json]); // Treba fixnut endpoint aby vracal pole
+                console.log(json)
+                setCourses(json); // Treba fixnut endpoint aby vracal pole
             }
         } catch (error) {
             console.error(error);

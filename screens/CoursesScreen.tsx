@@ -3,6 +3,7 @@ import {View, Text, StyleSheet} from "react-native";
 import Colors from "../constants/Colors";
 
 export default function CoursesScreen({ navigation, route }) {
+
     return (
         <View style={styles.container} >
             <Courses navigation={navigation} props={route.params}/>
