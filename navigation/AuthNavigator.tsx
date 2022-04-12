@@ -1,20 +1,20 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-//import {useState} from "@hookstate/core";
-//import {signedIn} from "../store/states";
-//import LoginScreen from "../screens/LoginScreen";
+import {signedIn} from "../store/state";
+import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import * as React from "react";
 import BottomTabNavigator from "./BottomTabNavigator";
 import CoursesStackNavigator from "./CoursesStackNavigator";
 import TestScreen from "../screens/TestScreen";
+import { useState } from '@hookstate/core';
 
 const Stack = createNativeStackNavigator();
 
 export default function AuthNavigator() {
-    const isSignedIn = false
+    const isSignedIn = useState(signedIn)
     return (
         <Stack.Navigator>
-            {isSignedIn ? (
+            {isSignedIn.get() ? (
                 <Stack.Screen name="BottomTabNavigator" component={BottomTabNavigator} options={{
                     headerShown: false
                 }} />
@@ -24,11 +24,11 @@ export default function AuthNavigator() {
                     {/*              options={{*/}
                     {/*                  headerShown: false*/}
                     {/*              }}/>*/}
-                    <Stack.Screen name="RegisterScreen" component={CoursesStackNavigator}
+                    <Stack.Screen name="LoginScreen" component={LoginScreen}
                                   options={{
                                       headerShown: false
                                   }}/>
-                    <Stack.Screen name="LoginScreen" component={TestScreen}
+                    <Stack.Screen name="RegisterScreen" component={RegisterScreen}
                                   options={{
                                       headerShown: false
                                   }}/>

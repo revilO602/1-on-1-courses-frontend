@@ -4,16 +4,16 @@ import {
     View,
     StyleSheet,
     Button,
-    Alert,
-    ScrollView, TextInput, Pressable, KeyboardAvoidingView, Platform,
+    Alert, TextInput, KeyboardAvoidingView, Platform,
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import Colors from "../constants/Colors";
 import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
-import { useHeaderHeight } from '@react-navigation/elements';
+import Errors from "../components/Errors";
+import Server from "../constants/Server";
+
 type FormData = {
     firstName: string;
     lastName: string;
@@ -22,22 +22,63 @@ type FormData = {
     confirmPassword: string;
 };
 
-export default function RegisterScreen(){
-    const insets = useSafeAreaInsets();
-
-    const headerHeight = useHeaderHeight();
+export default function RegisterScreen({navigation}){
     const {
         control,
         handleSubmit,
-        formState: {errors, isValid}
+        formState: {errors, isValid},
+        watch
     } = useForm({mode: 'onBlur'})
+    const currPassword = watch('password')
+    const onSubmit = (data: FormData) => {
+        console.log(data)
+        sendForm(data)
+    }
+    const alert = (data) =>
+      Alert.alert('Alert', data, [
+          {
+              text: 'Ok',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+          },
+      ]);
+    const extractFrontendErrors = () => {
+        let messages = []
+        const errArr = Object.values(errors)
+        for (let error of errArr) {
+            messages.push(error.message)
+        }
+        return messages
+    }
 
-    const onSubmit = (data: FormData) => console.log(data)
+    const sendForm = async (data) => {
+        try {
+            const response = await fetch(`${Server.url}/users/register`,{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            if (response.status === 201) {
+                navigation.navigate("LoginScreen")
+            } else {
+                const json = await response.json()
+                let errors = ''
+                for (var key of Object.keys(json)) {
+                    errors = errors + `${key}: ${json[key]}\n`
+                }
+                alert(errors)
+            }
+        } catch (error) {
+            alert(JSON.stringify(error));
+        }
+    }
     return (
-            <KeyboardAwareScrollView
-                contentContainerStyle={[styles.container, {paddingTop: insets.top}]}
-            enableOnAndroid
+            <SafeAreaView
+              style={styles.container}
             >
+                <Text style={[styles.text, styles.heading]}>Register</Text>
                 <Controller
                     control={control}
                     name="firstName"
@@ -50,6 +91,12 @@ export default function RegisterScreen(){
                             onChangeText={(value: any) => onChange(value)}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "First name is required"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -63,6 +110,12 @@ export default function RegisterScreen(){
                             onChangeText={(value: any) => onChange(value)}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Last name is required"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -76,6 +129,16 @@ export default function RegisterScreen(){
                             onChangeText={(value: any) => onChange(value)}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Email is required"
+                        },
+                        pattern: {
+                            value: /^(.+)@(.+)$/,
+                            message: "Invalid email format"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -90,6 +153,12 @@ export default function RegisterScreen(){
                             onChangeText={(value: any) => onChange(value)}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Password is required"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -104,9 +173,20 @@ export default function RegisterScreen(){
                             onChangeText={(value: any) => onChange(value)}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Password confirmation is required"
+                        },
+                        validate: value => value === currPassword || "The passwords do not match"
+                    }}
+
                 />
-                <SubmitButton text={"Register"} style={[styles.button]} onPress={handleSubmit(onSubmit)}/>
-            </KeyboardAwareScrollView>
+                <SubmitButton text={"Submit"} style={[styles.button]} onPress={handleSubmit(onSubmit)}/>
+                {errors && (
+                  <Errors errors={extractFrontendErrors()}/>
+                )}
+            </SafeAreaView>
     );
 };
 
@@ -123,7 +203,13 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
         color: Colors.text,
     },
+    heading: {
+        lineHeight: 50,
+        fontSize: 40,
+        textAlign: "center",
+        paddingBottom: 5
+    },
     button: {
-        color: Colors.text, 
+        color: Colors.text,
     }
 });

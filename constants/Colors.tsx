@@ -5,4 +5,6 @@ export default {
     primary: '#A8DADC',
     tabIconDefault: '#457B9D',
     tabIconSelected: '#1D3557',
+    error: "#ef476f",
+    linkBlue: '#5D5FEF'
 };
