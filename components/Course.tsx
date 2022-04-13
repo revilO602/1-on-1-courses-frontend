@@ -52,10 +52,17 @@ export default function Course({ navigation, course }) {
             {isLoading ? <ActivityIndicator/> : (
                 <View style = {styles.listItem}>
                     <Text style={{width: '70%'}}>{course.name}</Text>
-                    <Button title={"Learn More"} onPress={onPress}/>
-                    {/*<Pressable style={styles.button} onPress={onPress}>*/}
+                    {/*<Button title={"Learn More"} onPress={onPress}/>*/}
+                    <Pressable style={({ pressed }) => [
+                        {
+                            backgroundColor: pressed ? Colors.tabIconSelected : Colors.primary,
+                        },
+                        styles.button,
+                    ]}
+                               onPress={onPress}>
+                        <Text style={{fontWeight: 'bold'}}>Learn more</Text>
 
-                    {/*</Pressable>*/}
+                    </Pressable>
                 </View>
             )}
         </View>
@@ -77,9 +84,11 @@ const styles = StyleSheet.create({
         color: Colors.text
     },
     listItem: {
+        margin: 5,
         padding: 10,
         marginVertical: 10,
         backgroundColor: Colors.background,
+        borderRadius: 4,
         borderColor: 'black',
         borderWidth: 1,
         flexDirection: 'row',
@@ -92,6 +101,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         elevation: 3,
         minWidth: 100,
-        minHeight: 100
+        minHeight: 50,
+        marginRight: 100
     }
 });
