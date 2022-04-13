@@ -52,7 +52,6 @@ export default function Course({ navigation, course }) {
             {isLoading ? <ActivityIndicator/> : (
                 <View style = {styles.listItem}>
                     <Text style={{width: '70%'}}>{course.name}</Text>
-                    {/*<Button title={"Learn More"} onPress={onPress}/>*/}
                     <Pressable style={({ pressed }) => [
                         {
                             backgroundColor: pressed ? Colors.tabIconSelected : Colors.primary,
