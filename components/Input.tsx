@@ -3,7 +3,7 @@ import * as React from "react";
 import Colors from "../constants/Colors";
 
 export default function Input({placeholder, value, onBlur, onChangeText, label, secureTextEntry=false,
-                                  inputStyle = null}) {
+                                  inputStyle = null, errors= {}, name}) {
     return(
         <View style={styles.container}>
             <Text style={styles.label}>{label}</Text>
@@ -15,6 +15,7 @@ export default function Input({placeholder, value, onBlur, onChangeText, label, 
                 onChangeText={onChangeText}
                 style={[inputStyle, styles.text, styles.input]}
             />
+            { errors[name] && <Text style={styles.error}>{errors[name].message}</Text>}
         </View>
     )
 }
@@ -48,5 +49,12 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
         color: Colors.tabIconDefault,
         textAlign: "left"
-    }
+    },
+    error: {
+        fontSize: 15,
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: Colors.error
+    },
 });

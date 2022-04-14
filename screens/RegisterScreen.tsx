@@ -28,6 +28,7 @@ export default function RegisterScreen({navigation}){
         watch
     } = useForm({mode: 'onBlur'})
     const currPassword = watch('password')
+
     const onSubmit = (data: FormData) => {
         console.log(data)
         sendForm(data)
@@ -78,6 +79,8 @@ export default function RegisterScreen({navigation}){
                             value={value}
                             onBlur={onBlur}
                             onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"firstName"}
                         />
                     )}
                     rules={{
@@ -97,6 +100,8 @@ export default function RegisterScreen({navigation}){
                             value={value}
                             onBlur={onBlur}
                             onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"lastName"}
                         />
                     )}
                     rules={{
@@ -116,6 +121,8 @@ export default function RegisterScreen({navigation}){
                             value={value}
                             onBlur={onBlur}
                             onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"email"}
                         />
                     )}
                     rules={{
@@ -140,6 +147,8 @@ export default function RegisterScreen({navigation}){
                             value={value}
                             onBlur={onBlur}
                             onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"password"}
                         />
                     )}
                     rules={{
@@ -160,6 +169,8 @@ export default function RegisterScreen({navigation}){
                             value={value}
                             onBlur={onBlur}
                             onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"confirmPassword"}
                         />
                     )}
                     rules={{
@@ -172,9 +183,6 @@ export default function RegisterScreen({navigation}){
 
                 />
                 <SubmitButton buttonStyle={{marginHorizontal: 50}} text={"Submit"} onPress={handleSubmit(onSubmit)}/>
-                {errors && (
-                  <Errors errors={extractFrontendErrors()}/>
-                )}
             </SafeAreaView>
     );
 };

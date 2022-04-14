@@ -34,14 +34,6 @@ export default function LoginScreen({navigation}){
     console.log(data)
     sendForm(data)
   }
-  const extractErrors = () => {
-    let messages = []
-    const errArr = Object.values(errors)
-    for (let error of errArr) {
-      messages.push(error.message)
-    }
-    return messages
-  }
   const sendForm = async (data) => {
     try {
       const response = await fetch(`${Server.url}/users/login`,{
@@ -78,6 +70,8 @@ export default function LoginScreen({navigation}){
             value={value}
             onBlur={onBlur}
             onChangeText={(value: any) => onChange(value)}
+            errors={errors}
+            name={"email"}
           />
         )}
         rules={{
@@ -102,6 +96,8 @@ export default function LoginScreen({navigation}){
             value={value}
             onBlur={onBlur}
             onChangeText={(value: any) => onChange(value)}
+            errors={errors}
+            name={"password"}
           />
         )}
         rules={{
@@ -116,9 +112,6 @@ export default function LoginScreen({navigation}){
       <Pressable style={{marginVertical: 5}} onPress={()=>navigation.navigate("RegisterScreen")}>
         <Text style={styles.link}> Click here to register </Text>
       </Pressable>
-      {errors && (
-        <Errors errors={extractErrors()}/>
-      )}
     </SafeAreaView>
   );
 };

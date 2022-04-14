@@ -1,4 +1,4 @@
-import {View, StyleSheet, Text, Pressable,} from "react-native";
+import {StyleSheet, Text, Pressable,} from "react-native";
 import Colors from "../constants/Colors";
 
 export default function SubmitButton({ onPress, text, buttonStyle=null, textStyle=null }) {

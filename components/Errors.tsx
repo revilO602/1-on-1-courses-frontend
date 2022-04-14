@@ -28,13 +28,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: Colors.error
   },
-  listItem: {
-    padding: 10,
-    marginVertical: 10,
-    backgroundColor: Colors.background,
-    borderColor: 'black',
-    borderWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
 });

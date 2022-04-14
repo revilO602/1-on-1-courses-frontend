@@ -8,7 +8,6 @@ import DescriptionInput from "../components/DescriptionInput";
 import {Picker} from '@react-native-picker/picker';
 import Server from "../constants/Server";
 import {encode} from "base-64";
-import {email, password} from "../store/state";
 import SubmitButton from "../components/SubmitButton";
 import TimeTableView, { genTimeBlock } from 'react-native-timetable';
 import TimeslotAdder from "../components/TimeslotAdder";
@@ -16,13 +15,14 @@ import {WEEK_DAYS} from "../constants/Weekdays";
 import getOverlappingTimeslots from "../helpers/timeslotChecker"
 import TimeslotDeleter from "../components/TimeslotDeleter";
 import alert from "../components/alert";
+import { email, password} from "../store/state";
 
 export default function CreateCourseScreen({navigation}) {
   const {
     control,
     handleSubmit,
     formState: {errors, isValid}
-  } = useForm({mode: 'onBlur'})
+  } = useForm({mode: "onBlur"})
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
@@ -40,6 +40,29 @@ export default function CreateCourseScreen({navigation}) {
       const json = await response.json()
       setCategories(json)
     } catch (error) {
+      alert("Server error", "SERVER ERROR");
+    }
+  }
+  const postCourse = async (data) => {
+    try {
+      const response = await fetch(`${Server.url}/courses/`,{
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
+        },
+        body: JSON.stringify(data)
+      });
+      console.log("hello")
+      if (response.status === 201){
+        console.log("created")
+      }
+      else{
+        //const json = await response.json()
+        console.log(response.status)
+      }
+    } catch (error) {
+      console.log(error)
       alert("Server error", "SERVER ERROR");
     }
   }
@@ -100,8 +123,21 @@ export default function CreateCourseScreen({navigation}) {
     setEventsData(eventsData.filter(ev => ev !== event))
     setDeleteModalVisible(false)
   }
-  const confirm = () => {
-    console.log(timeslots)
+
+  const confirm = async (data: FormData) => {
+    if (timeslots.length < 1){
+      alert("No timeslots", "Please add at least one timeslot")
+      return
+    }
+    const course = {
+      name: data.name,
+      description: data.description,
+      categoryId: selectedCategory,
+      timeslots: timeslots
+    }
+    console.log(course)
+    console.log(JSON.stringify(course))
+    await postCourse(course)
   }
 
   const showTimeslotAdder = () => {
@@ -115,7 +151,7 @@ export default function CreateCourseScreen({navigation}) {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps={"always"}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -145,6 +181,8 @@ export default function CreateCourseScreen({navigation}) {
             onBlur={onBlur}
             onChangeText={(value: any) => onChange(value)}
             inputStyle={{minWidth: 300}}
+            errors={errors}
+            name={"name"}
           />
         )}
         rules={{
@@ -162,6 +200,7 @@ export default function CreateCourseScreen({navigation}) {
             value={value}
             onBlur={onBlur}
             onChangeText={(value: any) => onChange(value)}
+            errors={errors}
           />
         )}
         rules={{
@@ -198,7 +237,7 @@ export default function CreateCourseScreen({navigation}) {
         <SubmitButton text={"Delete timeslot"} onPress={showTimeslotDeleter}/>
       </View>
       <View style={styles.buttonContainer}>
-        <SubmitButton text={"Confirm"} onPress={confirm}/>
+        <SubmitButton text={"Confirm"} onPress={handleSubmit(confirm)}/>
       </View>
     </ScrollView>
   );
@@ -236,6 +275,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   headerStyle: {
-    backgroundColor: '#81E1B8'
+    backgroundColor: Colors.tabIconSelected
   },
 });

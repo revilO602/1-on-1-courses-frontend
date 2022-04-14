@@ -2,7 +2,7 @@ import {TextInput, StyleSheet, View, Text} from "react-native";
 import * as React from "react";
 import Colors from "../constants/Colors";
 
-export default function DescriptionInput({value, onBlur, onChangeText}) {
+export default function DescriptionInput({value, onBlur, onChangeText, errors}) {
   return(
     <View style={styles.container}>
       <Text style={styles.label}>Description</Text>
@@ -13,6 +13,7 @@ export default function DescriptionInput({value, onBlur, onChangeText}) {
         onChangeText={onChangeText}
         style={[styles.text, styles.input]}
       />
+      { errors["description"] && <Text style={styles.error}>{errors["description"].message}</Text>}
     </View>
   )
 }
@@ -49,5 +50,12 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: Colors.tabIconDefault,
     textAlign: "left"
+  },
+  error: {
+    fontSize: 15,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: Colors.error
   }
 });
