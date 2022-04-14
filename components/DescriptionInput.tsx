@@ -7,7 +7,7 @@ export default function DescriptionInput({value, onBlur, onChangeText}) {
     <View style={styles.container}>
       <Text style={styles.label}>Description</Text>
       <TextInput
-        placeholder="Enter course description"
+        placeholder="Enter course description..."
         value={value}
         onBlur={onBlur}
         onChangeText={onChangeText}

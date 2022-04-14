@@ -120,7 +120,7 @@ export default function LoginScreen({navigation}){
         }}
       />
 
-      <SubmitButton text={"Submit"} onPress={handleSubmit(onSubmit)}/>
+      <SubmitButton buttonStyle={{marginHorizontal: 50}} text={"Submit"} onPress={handleSubmit(onSubmit)}/>
       <Pressable style={{marginVertical: 5}} onPress={()=>navigation.navigate("RegisterScreen")}>
         <Text style={styles.link}> Click here to register </Text>
       </Pressable>

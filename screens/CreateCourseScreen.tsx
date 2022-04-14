@@ -1,4 +1,4 @@
-import {Modal, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Alert, Modal, ScrollView, StyleSheet, Text, View} from "react-native";
 import Colors from "../constants/Colors";
 import {Controller, useForm} from 'react-hook-form';
 import Input from "../components/Input";
@@ -13,6 +13,8 @@ import Errors from "../components/Errors";
 import SubmitButton from "../components/SubmitButton";
 import TimeTableView, { genTimeBlock } from 'react-native-timetable';
 import TimeslotAdder from "../components/TimeslotAdder";
+import {WEEK_DAYS} from "../constants/Weekdays";
+import getOverlappingTimeslots from "../helpers/timeslotChecker"
 
 export default function CreateCourseScreen({navigation}) {
   const {
@@ -23,11 +25,8 @@ export default function CreateCourseScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
   const [categories, setCategories] = useState([]);
-  const [eventsData, setEventsData] = useState([{
-    title: "9:00 - 10:50",
-    startTime: genTimeBlock("MON", 9),
-    endTime: genTimeBlock("MON", 10, 50),
-  }])
+  const [eventsData, setEventsData] = useState([])
+  const [timeslots, setTimeslots] = useState([])
 
   const fetchCategories = async () => {
     try {
@@ -49,9 +48,57 @@ export default function CreateCourseScreen({navigation}) {
     }
     return items
   }
+  const alert = (heading, data) =>
+    Alert.alert(heading, data, [
+      {
+        text: 'Ok',
+        style: 'cancel',
+      },
+    ]);
+  const createTimeslot = (day, hour, minute) =>{
+    let overlaps = getOverlappingTimeslots([...timeslots, {
+      weekDay: day.full,
+      startTime: `${hour.toString()}:${minute.toString().padStart(2, '0')}`
+    }])
+    if (overlaps.length > 0){
+      console.log(overlaps)
+      let overlapsText = ''
+      for (let timeslotPair of overlaps){
+        overlapsText += `${timeslotPair[0].weekDay}, ${timeslotPair[0].startTime} and ${timeslotPair[1].weekDay}, ${timeslotPair[1].startTime}\n`
+      }
+      alert("Overlapping timeslots",
+        `Can't create timeslot because these timeslots would overlap:\n${overlapsText}`)
+      return
+    }
+    let endHour
+    let endDay
+    if (hour === 23){
+      endHour = 0
+      if(day.short === "SUN"){
+        endDay=WEEK_DAYS[0]
+      }
+      else {
+        endDay = WEEK_DAYS[WEEK_DAYS.indexOf(day)+1]
+      }
+    }
+    else{
+      endHour = hour + 1
+      endDay = day
+    }
+    setEventsData([...eventsData, {
+      title: "hello",
+      startTime: genTimeBlock(day.short, hour, minute),
+      endTime: genTimeBlock(endDay.short, endHour, minute),
+    }])
+    setTimeslots([...timeslots, {
+      weekDay: day.full,
+      startTime: `${hour.toString()}:${minute.toString().padStart(2, '0')}`
+    }])
+    setModalVisible(!modalVisible)
 
+  }
   const confirm = () => {
-    console.log("confirmed")
+    console.log(timeslots)
   }
 
   const addTimeslot = () => {
@@ -70,7 +117,7 @@ export default function CreateCourseScreen({navigation}) {
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}>
-        <TimeslotAdder modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+        <TimeslotAdder modalVisible={modalVisible} setModalVisible={setModalVisible} createTimeslot={createTimeslot}/>
       </Modal>
       <Controller
         control={control}
@@ -120,15 +167,17 @@ export default function CreateCourseScreen({navigation}) {
         </Picker>
       </View>
       <Text style={styles.label}>Timeslots</Text>
-      <TimeTableView
-        events={eventsData}
-        pivotTime={0}
-        pivotEndTime={24}
-        numberOfDays={7}
-        formatDateHeader="ddd"
-        headerStyle = {styles.headerStyle}
-        locale="en-US"
-      />
+      <View style={{marginHorizontal: 5}}>
+        <TimeTableView
+          events={eventsData}
+          pivotTime={0}
+          pivotEndTime={24}
+          numberOfDays={7}
+          formatDateHeader="ddd"
+          headerStyle = {styles.headerStyle}
+          locale="en-US"
+        />
+      </View>
       <View style={styles.timeslotButtonsContainer}>
         <SubmitButton text={"Add timeslot"} onPress={addTimeslot}/>
         <SubmitButton text={"Delete timeslot"} onPress={confirm}/>
