@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Text,
   StyleSheet,
-  Alert,
   Pressable
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -14,6 +13,7 @@ import Server from "../constants/Server";
 import Errors from "../components/Errors";
 import { encode } from "base-64";
 import {signedIn, email, password} from "../store/state";
+import alert from "../components/alert";
 
 type FormData = {
   firstName: string;
@@ -42,14 +42,6 @@ export default function LoginScreen({navigation}){
     }
     return messages
   }
-  const alert = (data) =>
-    Alert.alert('Alert', data, [
-      {
-        text: 'Ok',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-    ]);
   const sendForm = async (data) => {
     try {
       const response = await fetch(`${Server.url}/users/login`,{
@@ -65,10 +57,10 @@ export default function LoginScreen({navigation}){
         password.set(data.password)
         signedIn.set(true)
       } else {
-        alert("Invalid credentials")
+        alert("Error", "Invalid credentials")
       }
     } catch (error) {
-      alert(JSON.stringify(error));
+      alert("Server error", "SERVER ERROR");
     }
   }
   return (

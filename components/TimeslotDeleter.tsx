@@ -4,72 +4,35 @@ import {useState} from "react";
 import * as React from "react";
 import Colors from "../constants/Colors";
 import SubmitButton from "./SubmitButton";
-import {WEEK_DAYS} from "../constants/Weekdays";
 
-export default function TimeslotAdder({setModalVisible, createTimeslot}) {
-  const [selectedHour, setSelectedHour] = useState(0);
-  const [selectedMinute, setSelectedMinute] = useState(0);
-  const [selectedDay, setSelectedDay] = useState(WEEK_DAYS[0]);
-  const renderHours = () => {
-    const hours = []
-    for (let i=0; i<24; i++){
-      hours.push(<Picker.Item label={i.toString()} value={i} key={i}/>)
-    }
-    return hours
-  }
-  const renderMinutes = () => {
-    const minutes = []
-    for (let i=0; i<60; i++){
-      minutes.push(<Picker.Item label={i.toString().padStart(2, '0')} value={i} key={i}/>)
-    }
-    return minutes
-  }
-  const renderWeekdays = () => {
+export default function TimeslotDeleter({ setModalVisible, deleteTimeslot, events}) {
+  const [selectedEvent, setSelectedEvent] = useState(events[0]);
 
+  const renderTimeslots = () => {
     const items = []
-    for (let day of WEEK_DAYS){
-      items.push(<Picker.Item label={day.full} value={day} key={day.short}/>)
+    for (let event of events){
+      const label = `${event.timeslot.weekDay}, ${event.timeslot.startTime}`
+      items.push(<Picker.Item label={label} value={event} key={label}/>)
     }
     return items
   }
   return(
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Text style={styles.heading}>Add timeslot</Text>
+        <Text style={styles.heading}>Delete timeslot</Text>
         <Text style={styles.subheading}>Every lesson lasts 60 minutes!</Text>
-        <Text style={styles.subsubheading}>Pick day</Text>
+        <Text style={styles.subsubheading}>Pick timeslot</Text>
         <View style={styles.picker}>
           <Picker
-            selectedValue={selectedDay}
+            selectedValue={selectedEvent}
             onValueChange={(itemValue, itemIndex) =>
-              setSelectedDay(itemValue)
+              setSelectedEvent(itemValue)
             }>
-            {renderWeekdays()}
-          </Picker>
-        </View>
-        <Text style={styles.subsubheading}>Pick start time</Text>
-        <Text style={styles.modalText}>Hour</Text>
-        <View style={styles.picker}>
-          <Picker
-            selectedValue={selectedHour}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedHour(itemValue)
-            }>
-            {renderHours()}
-          </Picker>
-        </View>
-        <Text style={styles.modalText}>Minute</Text>
-        <View style={styles.picker}>
-          <Picker
-            selectedValue={selectedMinute}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedMinute(itemValue)
-            }>
-            {renderMinutes()}
+            {renderTimeslots()}
           </Picker>
         </View>
         <SubmitButton
-          onPress={() => createTimeslot(selectedDay, selectedHour, selectedMinute)}
+          onPress={() => deleteTimeslot(selectedEvent)}
           text={"Confirm"}/>
         <SubmitButton
           onPress={() => setModalVisible(false)}

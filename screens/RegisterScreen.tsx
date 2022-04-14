@@ -1,10 +1,7 @@
 import * as React from 'react';
 import {
     Text,
-    View,
     StyleSheet,
-    Button,
-    Alert, TextInput, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
@@ -13,6 +10,7 @@ import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
 import Errors from "../components/Errors";
 import Server from "../constants/Server";
+import alert from "../components/alert";
 
 type FormData = {
     firstName: string;
@@ -34,14 +32,6 @@ export default function RegisterScreen({navigation}){
         console.log(data)
         sendForm(data)
     }
-    const alert = (data) =>
-      Alert.alert('Alert', data, [
-          {
-              text: 'Ok',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-          },
-      ]);
     const extractFrontendErrors = () => {
         let messages = []
         const errArr = Object.values(errors)
@@ -68,11 +58,10 @@ export default function RegisterScreen({navigation}){
                 for (var key of Object.keys(json)) {
                     errors = errors + `${key}: ${json[key]}\n`
                 }
-                alert(errors)
+                alert("Error", errors)
             }
         } catch (error) {
-            alert(JSON.stringify(error));
-        }
+            alert("Server error", "SERVER ERROR");        }
     }
     return (
             <SafeAreaView

@@ -1,4 +1,4 @@
-import {Alert, Modal, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Modal, ScrollView, StyleSheet, Text, View} from "react-native";
 import Colors from "../constants/Colors";
 import {Controller, useForm} from 'react-hook-form';
 import Input from "../components/Input";
@@ -9,12 +9,13 @@ import {Picker} from '@react-native-picker/picker';
 import Server from "../constants/Server";
 import {encode} from "base-64";
 import {email, password} from "../store/state";
-import Errors from "../components/Errors";
 import SubmitButton from "../components/SubmitButton";
 import TimeTableView, { genTimeBlock } from 'react-native-timetable';
 import TimeslotAdder from "../components/TimeslotAdder";
 import {WEEK_DAYS} from "../constants/Weekdays";
 import getOverlappingTimeslots from "../helpers/timeslotChecker"
+import TimeslotDeleter from "../components/TimeslotDeleter";
+import alert from "../components/alert";
 
 export default function CreateCourseScreen({navigation}) {
   const {
@@ -22,7 +23,8 @@ export default function CreateCourseScreen({navigation}) {
     handleSubmit,
     formState: {errors, isValid}
   } = useForm({mode: 'onBlur'})
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
   const [categories, setCategories] = useState([]);
   const [eventsData, setEventsData] = useState([])
@@ -38,7 +40,7 @@ export default function CreateCourseScreen({navigation}) {
       const json = await response.json()
       setCategories(json)
     } catch (error) {
-      console.error(error);
+      alert("Server error", "SERVER ERROR");
     }
   }
   const renderCategories = () => {
@@ -48,13 +50,7 @@ export default function CreateCourseScreen({navigation}) {
     }
     return items
   }
-  const alert = (heading, data) =>
-    Alert.alert(heading, data, [
-      {
-        text: 'Ok',
-        style: 'cancel',
-      },
-    ]);
+
   const createTimeslot = (day, hour, minute) =>{
     let overlaps = getOverlappingTimeslots([...timeslots, {
       weekDay: day.full,
@@ -85,24 +81,34 @@ export default function CreateCourseScreen({navigation}) {
       endHour = hour + 1
       endDay = day
     }
-    setEventsData([...eventsData, {
-      title: "hello",
-      startTime: genTimeBlock(day.short, hour, minute),
-      endTime: genTimeBlock(endDay.short, endHour, minute),
-    }])
-    setTimeslots([...timeslots, {
+    let newTimeslot = {
       weekDay: day.full,
       startTime: `${hour.toString()}:${minute.toString().padStart(2, '0')}`
+    }
+    setEventsData([...eventsData, {
+      title: `${hour.toString()}:${minute.toString().padStart(2, '0')} - ${endHour.toString()}:${minute.toString().padStart(2, '0')}`,
+      startTime: genTimeBlock(day.short, hour, minute),
+      endTime: genTimeBlock(endDay.short, endHour, minute),
+      timeslot: newTimeslot
     }])
-    setModalVisible(!modalVisible)
+    setTimeslots([...timeslots, newTimeslot])
+    setAddModalVisible(false)
 
+  }
+  const deleteTimeslot = (event) =>{
+    setTimeslots(timeslots.filter(timeslot => timeslot !== event.timeslot))
+    setEventsData(eventsData.filter(ev => ev !== event))
+    setDeleteModalVisible(false)
   }
   const confirm = () => {
     console.log(timeslots)
   }
 
-  const addTimeslot = () => {
-    setModalVisible(true)
+  const showTimeslotAdder = () => {
+    setAddModalVisible(true)
+  }
+  const showTimeslotDeleter = () => {
+    setDeleteModalVisible(true)
   }
   useEffect(() => {
     fetchCategories();
@@ -113,11 +119,20 @@ export default function CreateCourseScreen({navigation}) {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={addModalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setAddModalVisible(!addModalVisible);
         }}>
-        <TimeslotAdder modalVisible={modalVisible} setModalVisible={setModalVisible} createTimeslot={createTimeslot}/>
+        <TimeslotAdder modalVisible={addModalVisible} setModalVisible={setAddModalVisible} createTimeslot={createTimeslot}/>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={deleteModalVisible}
+        onRequestClose={() => {
+          setDeleteModalVisible(!deleteModalVisible);
+        }}>
+        <TimeslotDeleter setModalVisible={setDeleteModalVisible} deleteTimeslot={deleteTimeslot} events={eventsData}/>
       </Modal>
       <Controller
         control={control}
@@ -179,8 +194,8 @@ export default function CreateCourseScreen({navigation}) {
         />
       </View>
       <View style={styles.timeslotButtonsContainer}>
-        <SubmitButton text={"Add timeslot"} onPress={addTimeslot}/>
-        <SubmitButton text={"Delete timeslot"} onPress={confirm}/>
+        <SubmitButton text={"Add timeslot"} onPress={showTimeslotAdder}/>
+        <SubmitButton text={"Delete timeslot"} onPress={showTimeslotDeleter}/>
       </View>
       <View style={styles.buttonContainer}>
         <SubmitButton text={"Confirm"} onPress={confirm}/>
