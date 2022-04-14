@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {Modal, ScrollView, StyleSheet, Text, View} from "react-native";
 import Colors from "../constants/Colors";
 import {Controller, useForm} from 'react-hook-form';
 import Input from "../components/Input";
@@ -12,6 +12,7 @@ import {email, password} from "../store/state";
 import Errors from "../components/Errors";
 import SubmitButton from "../components/SubmitButton";
 import TimeTableView, { genTimeBlock } from 'react-native-timetable';
+import TimeslotAdder from "../components/TimeslotAdder";
 
 export default function CreateCourseScreen({navigation}) {
   const {
@@ -19,6 +20,7 @@ export default function CreateCourseScreen({navigation}) {
     handleSubmit,
     formState: {errors, isValid}
   } = useForm({mode: 'onBlur'})
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
   const [categories, setCategories] = useState([]);
   const [eventsData, setEventsData] = useState([{
@@ -52,12 +54,24 @@ export default function CreateCourseScreen({navigation}) {
     console.log("confirmed")
   }
 
+  const addTimeslot = () => {
+    setModalVisible(true)
+  }
   useEffect(() => {
     fetchCategories();
   }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <TimeslotAdder modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+      </Modal>
       <Controller
         control={control}
         name="name"
@@ -116,7 +130,7 @@ export default function CreateCourseScreen({navigation}) {
         locale="en-US"
       />
       <View style={styles.timeslotButtonsContainer}>
-        <SubmitButton text={"Add timeslot"} onPress={confirm}/>
+        <SubmitButton text={"Add timeslot"} onPress={addTimeslot}/>
         <SubmitButton text={"Delete timeslot"} onPress={confirm}/>
       </View>
       <View style={styles.buttonContainer}>
