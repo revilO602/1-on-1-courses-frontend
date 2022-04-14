@@ -1,7 +1,10 @@
 import TimeTableView, {genTimeBlock} from "react-native-timetable";
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import {ScrollView, StyleSheet, Text, View} from "react-native";
 import Colors from "../constants/Colors";
+import { encode } from "base-64";
+import {signedIn, email, password} from "../store/state";
+import Server from "../constants/Server";
 
 const events_data = [
     {
@@ -60,13 +63,61 @@ const events_data = [
     },
 ];
 
+
 export default function TimetableScreen(){
+    const [gotTimeslots, setTimeslots] = useState([]);
+    const [getJson, setJson] = useState([])
+    const getTimetable = async () => {
+        try {
+            const response = await fetch(`${Server.url}/timetable`,{
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
+                },
+
+            });
+            if (response.status === 200) {
+                const json = await response.json();
+                //signedIn.set(true)
+                console.log(json);
+                setJson(json);
+            } else {
+                alert("Invalid credentials")
+            }
+        } catch (error) {
+            alert(JSON.stringify(error));
+        }
+    }
+    console.log(email.get());
+    useEffect(() => {
+        getTimetable()
+    }, []);
+
+    const actor = (email.get()).substring(0, 7);
+
+    // useEffect(() => {
+    //     getTimetable();
+    //     setTimeslots(getJson.studentTimeslots.map((timeslot: any) => {
+    //         //console.log(timeslot.startTime)
+    //         const time = timeslot.startTime;
+    //         const weekday = timeslot.weekDay.substring(0,3).toUpperCase();
+    //         const endHour = parseInt(time) + 1
+    //
+    //         console.log(weekday);
+    //         return {
+    //             title: `${time.substring(0, 2)} - ${endHour.toString()}`,
+    //             startTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2))}`),
+    //             endTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2)) + 1}`, 50),
+    //         }
+    //     }))
+    // }, []);
 
     return (
         <ScrollView contentContainerStyle={{backgroundColor: Colors.background, margin: 5}}>
             <TimeTableView
                 //scrollViewRef={this.scrollViewRef}
-                events={events_data}
+                events={gotTimeslots}
                 pivotTime={0}
                 //pivotDate={this.pivotDate}
                 numberOfDays={7}

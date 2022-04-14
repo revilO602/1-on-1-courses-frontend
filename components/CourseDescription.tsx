@@ -21,7 +21,7 @@ export default function CourseDescription({navigation, route}){
             const weekday = timeslot.weekDay.substring(0,3).toUpperCase();
             const endHour = parseInt(time) + 1
 
-            console.log(weekday);
+            //console.log(weekday);
             return {
                 title: `${time.substring(0, 2)} - ${endHour.toString()}`,
                 startTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2))}`),

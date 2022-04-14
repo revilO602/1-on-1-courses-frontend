@@ -20,7 +20,7 @@ export default function Courses({ navigation, props }) {
             });
             if(response.status === 200) { // neviem ci to je spravne z hladiska poradia async operacii
                 const json = await response.json();
-                console.log(json)
+                //console.log(json)
                 setCourses(json); // Treba fixnut endpoint aby vracal pole
             }
         } catch (error) {
