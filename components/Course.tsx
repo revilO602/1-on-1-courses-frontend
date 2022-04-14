@@ -1,4 +1,14 @@
-import {View, Text, StyleSheet, TextInput, Button, ScrollView, ActivityIndicator, FlatList} from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    Button,
+    ScrollView,
+    ActivityIndicator,
+    FlatList,
+    Pressable
+} from "react-native";
 import Colors from "../constants/Colors";
 import {useEffect, useState} from "react";
 import Server from "../constants/Server";
@@ -6,9 +16,9 @@ import { encode } from "base-64";
 
 export default function Course({ navigation, course }) {
     const onPress = () => {
-        console.log(courses);
+        //console.log(courses);
         //TODO tuto idem dorobit CourseDetail screen
-        navigation.navigate('CourseDetailScreen', { courses })
+        navigation.navigate('CourseDetailScreen', { course })
     }
 
     const [isLoading, setLoading] = useState(true);
@@ -42,7 +52,16 @@ export default function Course({ navigation, course }) {
             {isLoading ? <ActivityIndicator/> : (
                 <View style = {styles.listItem}>
                     <Text style={{width: '70%'}}>{course.name}</Text>
-                    <Button title={"Learn More"} onPress={onPress}/>
+                    <Pressable style={({ pressed }) => [
+                        {
+                            backgroundColor: pressed ? Colors.tabIconSelected : Colors.primary,
+                        },
+                        styles.button,
+                    ]}
+                               onPress={onPress}>
+                        <Text style={{fontWeight: 'bold'}}>Learn more</Text>
+
+                    </Pressable>
                 </View>
             )}
         </View>
@@ -64,12 +83,24 @@ const styles = StyleSheet.create({
         color: Colors.text
     },
     listItem: {
+        margin: 5,
         padding: 10,
         marginVertical: 10,
         backgroundColor: Colors.background,
+        borderRadius: 4,
         borderColor: 'black',
         borderWidth: 1,
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    button: {
+        margin: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 4,
+        elevation: 3,
+        minWidth: 100,
+        minHeight: 50,
+        marginRight: 100
     }
 });

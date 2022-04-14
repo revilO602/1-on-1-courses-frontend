@@ -5,6 +5,8 @@ import * as React from "react";
 import TestScreen from "../screens/TestScreen";
 import {StyleSheet, Text} from "react-native";
 import CoursesStackNavigator from "./CoursesStackNavigator";
+import TeacherStackNavigator from "./TeacherStackNavigator";
+import TimetableScreen from "../screens/TimetableScreen";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -31,7 +33,7 @@ export default function BottomTabNavigator() {
             />
             <BottomTab.Screen
                 name="Teacher"
-                component={TestScreen}
+                component={TeacherStackNavigator}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome5 name="chalkboard-teacher" size={24} color={color} />,
@@ -51,7 +53,7 @@ export default function BottomTabNavigator() {
             />
             <BottomTab.Screen
                 name="Timetable"
-                component={TestScreen}
+                component={TimetableScreen}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,
