@@ -1,14 +1,49 @@
-import {ActivityIndicator, View} from "react-native";
+import {ActivityIndicator, ScrollView, StyleSheet, Text, View} from "react-native";
 import CourseDescription from "../components/CourseDescription";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Server from "../constants/Server";
 import {email, password} from "../store/state";
 import { encode } from "base-64";
-
+import alert from "../components/alert";
+import Colors from "../constants/Colors";
 
 export default function CourseDetailScreen({navigation, route}) {
   const [course, setCourse] = useState({});
   const [isLoading, setLoading] = useState(true);
+
+  const joinTimeslot = async (data)=>{
+    try {
+      const response = await fetch(`${Server.url}/courses/join`,{
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
+        },
+        body: JSON.stringify([{id: data.timeslot.id}])
+      });
+      if (response.status === 200){
+        alert('Cuuu', "Cuuu")
+      }
+      else{
+        const json = await response.json()
+        let errors = ''
+        for (var key of Object.keys(json)) {
+          if (key === "overlappingTimeslots"){
+            let overlapsText = ''
+            for (let timeslotPair of json[key]){
+              overlapsText += `${timeslotPair[0].weekDay}, ${timeslotPair[0].startTime} and ${timeslotPair[1].weekDay}, ${timeslotPair[1].startTime}\n`
+            }
+            errors = errors + `${overlapsText}\n`
+          }
+          else errors = errors + `${json[key]}\n`
+        }
+        alert("Error", errors)
+      }
+    } catch (error) {
+      console.log(error)
+      alert("Server error", "SERVER ERROR");
+    }
+  }
 
   const fetchCourse = async () => {
     try {
@@ -19,24 +54,40 @@ export default function CourseDetailScreen({navigation, route}) {
       });
       const json = await response.json();
       setCourse(json);
+      console.log(json)
     } catch (error) {
       console.error(error);
+      alert('Server error', 'SERVER ERROR')
     } finally {
       setLoading(false);
     }
   }
 
-  useEffect(() =>{
-    fetchCourse()
+  useEffect( () =>{
+     fetchCourse()
   },[])
 
   return (
-      <View>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps={"always"}>
         {isLoading ? <ActivityIndicator/> : (
-          <CourseDescription navigation={navigation} course={course}>
-
-          </CourseDescription>
+          <>
+            <CourseDescription navigation={navigation} course={course} onEventPress={joinTimeslot}/>
+            <Text style={styles.bottomText}>Tap on a timeslot to reserve it for your 1-on-1 lesson!</Text>
+          </>
         )}
-      </View>
+      </ScrollView>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.background
+  },
+  bottomText: {
+    color: Colors.tabIconSelected,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginHorizontal: 10,
+    marginBottom: 10,
+    fontSize: 20
+  }
+})

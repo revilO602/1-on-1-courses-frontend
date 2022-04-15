@@ -122,7 +122,7 @@ export default function CreateCourseScreen({navigation}) {
       title: `${hour.toString()}:${minute.toString().padStart(2, '0')} - ${endHour.toString()}:${minute.toString().padStart(2, '0')}`,
       startTime: genTimeBlock(day.short, hour, minute),
       endTime: genTimeBlock(endDay.short, endHour, minute),
-      timeslot: newTimeslot
+      timeslot: newTimeslot,
     }])
     setTimeslots([...timeslots, newTimeslot])
     setAddModalVisible(false)
@@ -154,6 +154,11 @@ export default function CreateCourseScreen({navigation}) {
   const showTimeslotDeleter = () => {
     setDeleteModalVisible(true)
   }
+
+  const clickedEvent = (data) =>{
+    console.log(data)
+  }
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -232,6 +237,7 @@ export default function CreateCourseScreen({navigation}) {
       <View style={{marginHorizontal: 5}}>
         <TimeTableView
           events={eventsData}
+          onEventPress={clickedEvent}
           pivotTime={0}
           pivotEndTime={24}
           numberOfDays={7}

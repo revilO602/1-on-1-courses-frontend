@@ -1,17 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import Colors from "../constants/Colors";
-import TimeTableView, { genTimeBlock } from 'react-native-timetable';
-import Server from "../constants/Server";
 import {WEEK_DAYS} from "../constants/Weekdays";
+import TimeTableView, { genTimeBlock } from 'react-native-timetable';
 
-
-
-
-export default function CourseDescription({navigation, course}){
+export default function CourseDescription({navigation, course, onEventPress=null}){
     const [events, setEvents] = useState([]);
 
-    useEffect(() => {
+    const createEvents = () =>{
         setEvents(course.timeslots.map((timeslot: any) => {
             const startTime = timeslot.startTime.split(':');
             const startHour = parseInt(startTime[0])
@@ -35,13 +31,18 @@ export default function CourseDescription({navigation, course}){
             return {
                 title: `${startHour.toString()}:${startMinute.toString().padStart(2, '0')} - ${endHour.toString()}:${startMinute.toString().padStart(2, '0')}`,
                 startTime: genTimeBlock(startDayShort, startHour, startMinute),
-                endTime:  genTimeBlock(endDayShort, endHour, startMinute)
+                endTime:  genTimeBlock(endDayShort, endHour, startMinute),
+                timeslot: timeslot
             }
-         }))
-    }, []);
+        }))
+    }
+
+    useEffect( () =>{
+        createEvents()
+    },[])
 
     return (
-        <ScrollView contentContainerStyle={{backgroundColor: Colors.background, margin: 5}}>
+        <View style={{backgroundColor: Colors.background, margin: 5}}>
             <View style={styles.viewStyle}>
                 <Text style={styles.titleStyle}>{course.name}</Text>
                 <Text style={styles.subtitleStyle}>by {course.teacher.firstName} {course.teacher.lastName}</Text>
@@ -51,7 +52,10 @@ export default function CourseDescription({navigation, course}){
                 <Text style={styles.contentStyle}>{course.description}</Text>
             </View>
             <View style={styles.viewStyle}>
+                <Text style={styles.descriptionStyle}>Timeslots</Text>
+                <Text style={styles.subtitleStyle}>All lessons last an hour</Text>
                 <TimeTableView
+                  onEventPress={onEventPress}
                   events={events}
                   pivotTime={0}
                   pivotEndTime={24}
@@ -60,7 +64,7 @@ export default function CourseDescription({navigation, course}){
                   headerStyle = {styles.headerStyle}
                   locale="en-US"/>
             </View>
-        </ScrollView>
+        </View>
     );
 }
 
