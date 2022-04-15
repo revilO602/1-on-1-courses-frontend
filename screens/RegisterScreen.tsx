@@ -8,7 +8,6 @@ import { useForm, Controller } from 'react-hook-form';
 import Colors from "../constants/Colors";
 import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
-import Errors from "../components/Errors";
 import Server from "../constants/Server";
 import alert from "../components/alert";
 

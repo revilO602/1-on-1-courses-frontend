@@ -7,15 +7,12 @@ import Server from "../constants/Server";
 
 
 
-export default function CourseDescription({navigation, route}){
-    // console.log('------------------------------------------')
-    //console.log(route);
-
+export default function CourseDescription({navigation, course}){
 
     const [gotTimeslots, setTimeslots] = useState([]);
 
     useEffect(() => {
-        setTimeslots(route.course.timeslots.map((timeslot: any) => {
+        setTimeslots(course.timeslots.map((timeslot: any) => {
             //console.log(timeslot.startTime)
             const time = timeslot.startTime;
             const weekday = timeslot.weekDay.substring(0,3).toUpperCase();
@@ -35,12 +32,12 @@ export default function CourseDescription({navigation, route}){
         <ScrollView contentContainerStyle={{backgroundColor: Colors.background, margin: 5}}>
 
             <View style={styles.viewStyle}>
-                <Text style={styles.titleStyle}>{route.course.name}</Text>
-                <Text style={styles.subtitleStyle}>by {route.course.teacher.firstName} {route.course.teacher.lastName}</Text>
+                <Text style={styles.titleStyle}>{course.name}</Text>
+                <Text style={styles.subtitleStyle}>by {course.teacher.firstName} {course.teacher.lastName}</Text>
             </View>
             <View style={styles.viewStyle}>
                 <Text style={styles.descriptionStyle}>Description</Text>
-                <Text style={styles.contentStyle}>{route.course.description}</Text>
+                <Text style={styles.contentStyle}>{course.description}</Text>
             </View>
             <View style={styles.viewStyle}>
                 <TimeTableView

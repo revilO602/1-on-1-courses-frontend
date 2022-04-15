@@ -199,7 +199,7 @@ export default function CreateCourseScreen({navigation}) {
         rules={{
           required: {
             value: true,
-            message: "Course name is required"
+            message: "CourseButton name is required"
           },
         }}
       />
@@ -217,7 +217,7 @@ export default function CreateCourseScreen({navigation}) {
         rules={{
           required: {
             value: true,
-            message: "Course description is required"
+            message: "CourseButton description is required"
           },
         }}
       />

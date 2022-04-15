@@ -3,9 +3,9 @@ import Colors from "../constants/Colors";
 import {useEffect, useState} from "react";
 import { encode } from "base-64";
 import Server from "../constants/Server";
-import CategoryButton from "./CategoryButton";
-import Course from "./Course";
-
+import CourseButton from "./CourseButton";
+import alert from "./alert";
+import { email, password} from "../store/state";
 
 export default function Courses({ navigation, props }) {
     const [isLoading, setLoading] = useState(true);
@@ -15,16 +15,16 @@ export default function Courses({ navigation, props }) {
         try {
             const response = await fetch(`${Server.url}/courses/?categoryId=${props.id}`,{
                 headers: new Headers({
-                    'Authorization': 'Basic '+ encode('teacher1@login.sk:heslo'),
+                    'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
                 }),
             });
-            if(response.status === 200) { // neviem ci to je spravne z hladiska poradia async operacii
+            if(response.status === 200) {
                 const json = await response.json();
-                //console.log(json)
-                setCourses(json); // Treba fixnut endpoint aby vracal pole
+                setCourses(json);
             }
         } catch (error) {
             console.error(error);
+            alert("Server error", "SERVER ERROR")
         } finally {
             setLoading(false);
         }
@@ -38,13 +38,10 @@ export default function Courses({ navigation, props }) {
         <View>
             {isLoading ? <ActivityIndicator/> : (
                 <View>
-                    <Text style = {styles.text}>
-                        Current Courses for - {props.name} [{props.id}]
-                    </Text>
                     <FlatList
                         data={courses}
                         renderItem={({ item }) => (
-                            <Course navigation={navigation} course={item}/>
+                            <CourseButton navigation={navigation} course={item} key={item.id}/>
                         )}
                     />
                 </View>
@@ -52,28 +49,3 @@ export default function Courses({ navigation, props }) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: Colors.background
-    },
-    text: {
-        fontSize: 15,
-        lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: Colors.text
-    },
-    listItem: {
-        padding: 10,
-        marginVertical: 10,
-        backgroundColor: Colors.background,
-        borderColor: 'black',
-        borderWidth: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    }
-});

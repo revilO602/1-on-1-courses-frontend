@@ -10,7 +10,6 @@ import Colors from "../constants/Colors";
 import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
 import Server from "../constants/Server";
-import Errors from "../components/Errors";
 import { encode } from "base-64";
 import {signedIn, email, password} from "../store/state";
 import alert from "../components/alert";

@@ -1,18 +1,42 @@
-import {View} from "react-native";
+import {ActivityIndicator, View} from "react-native";
 import CourseDescription from "../components/CourseDescription";
 import {useEffect, useState} from "react";
 import Server from "../constants/Server";
-import Course from "../components/Course";
+import {email, password} from "../store/state";
+import { encode } from "base-64";
 
 
 export default function CourseDetailScreen({navigation, route}) {
+  const [course, setCourse] = useState({});
+  const [isLoading, setLoading] = useState(true);
 
-    //console.log(route.params);
-    return (
-        <View>
-            <CourseDescription navigation={navigation} route={route.params}>
+  const fetchCourse = async () => {
+    try {
+      const response = await fetch(`${Server.url}/courses/${route.params.courseId}`,{
+        headers: new Headers({
+          'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
+        }),
+      });
+      const json = await response.json();
+      setCourse(json);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-            </CourseDescription>
-        </View>
-    );
+  useEffect(() =>{
+    fetchCourse()
+  },[])
+
+  return (
+      <View>
+        {isLoading ? <ActivityIndicator/> : (
+          <CourseDescription navigation={navigation} course={course}>
+
+          </CourseDescription>
+        )}
+      </View>
+  );
 }
