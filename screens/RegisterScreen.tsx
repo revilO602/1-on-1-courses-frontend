@@ -33,14 +33,6 @@ export default function RegisterScreen({navigation}){
         console.log(data)
         sendForm(data)
     }
-    const extractFrontendErrors = () => {
-        let messages = []
-        const errArr = Object.values(errors)
-        for (let error of errArr) {
-            messages.push(error.message)
-        }
-        return messages
-    }
 
     const sendForm = async (data) => {
         try {

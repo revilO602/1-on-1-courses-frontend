@@ -58,8 +58,19 @@ export default function CreateCourseScreen({navigation}) {
         console.log("created")
       }
       else{
-        //const json = await response.json()
-        console.log(response.status)
+        const json = await response.json()
+        let errors = ''
+        for (var key of Object.keys(json)) {
+          if (key === "overlappingTimeslots"){
+            let overlapsText = ''
+            for (let timeslotPair of json[key]){
+              overlapsText += `${timeslotPair[0].weekDay}, ${timeslotPair[0].startTime} and ${timeslotPair[1].weekDay}, ${timeslotPair[1].startTime}\n`
+            }
+            errors = errors + `${overlapsText}\n`
+          }
+          else errors = errors + `${json[key]}\n`
+        }
+        alert("Error", errors)
       }
     } catch (error) {
       console.log(error)
