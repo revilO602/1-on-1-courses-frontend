@@ -1,13 +1,42 @@
 import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import Colors from "../constants/Colors";
+import Server from "../constants/Server";
+import {email, password} from "../store/state";
+import alert from "../components/alert";
+import { encode } from "base-64";
+import {useEffect} from "react";
 
 
-export default function MyCoursesScreen({ navigation }) {
+export default function MyCoursesScreen({ navigation, route }) {
     const onPress = () => {
         //console.log(courses);
         //TODO tuto idem dorobit CourseDetail screen
         navigation.navigate('CourseDetailScreen', { course })
     }
+
+
+    const fetchCourses = async () => {
+        try {
+            const response = await fetch(`${Server.url}/teacher/courses`,{
+                headers: new Headers({
+                    'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
+                }),
+            });
+            if(response.status === 200) {
+                const json = await response.json();
+                setCourses(json);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Server error", "SERVER ERROR")
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchCourses()
+    }, []);
 
     return (
         <View style={{flex: 1}}>
