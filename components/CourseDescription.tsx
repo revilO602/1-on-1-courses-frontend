@@ -3,34 +3,45 @@ import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import Colors from "../constants/Colors";
 import TimeTableView, { genTimeBlock } from 'react-native-timetable';
 import Server from "../constants/Server";
+import {WEEK_DAYS} from "../constants/Weekdays";
 
 
 
 
 export default function CourseDescription({navigation, course}){
-
-    const [gotTimeslots, setTimeslots] = useState([]);
+    const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        setTimeslots(course.timeslots.map((timeslot: any) => {
-            //console.log(timeslot.startTime)
-            const time = timeslot.startTime;
-            const weekday = timeslot.weekDay.substring(0,3).toUpperCase();
-            const endHour = parseInt(time) + 1
-
-            //console.log(weekday);
-            return {
-                title: `${time.substring(0, 2)} - ${endHour.toString()}`,
-                startTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2))}`),
-                endTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2)) + 1}`, 50),
+        setEvents(course.timeslots.map((timeslot: any) => {
+            const startTime = timeslot.startTime.split(':');
+            const startHour = parseInt(startTime[0])
+            const startMinute = parseInt(startTime[1])
+            const startDayShort = timeslot.weekDay.substring(0,3).toUpperCase();
+            let endHour
+            let endDayShort
+            if (startHour === 23){
+                endHour = 0
+                if(startDayShort === "SUN"){
+                    endDayShort=WEEK_DAYS[0].short
+                }
+                else {
+                    endDayShort = WEEK_DAYS[WEEK_DAYS.findIndex(day => day.short === startDayShort)+1].short
+                }
             }
-        }))
+            else{
+                endHour = startHour + 1
+                endDayShort = startDayShort
+            }
+            return {
+                title: `${startHour.toString()}:${startMinute.toString().padStart(2, '0')} - ${endHour.toString()}:${startMinute.toString().padStart(2, '0')}`,
+                startTime: genTimeBlock(startDayShort, startHour, startMinute),
+                endTime:  genTimeBlock(endDayShort, endHour, startMinute)
+            }
+         }))
     }, []);
-
 
     return (
         <ScrollView contentContainerStyle={{backgroundColor: Colors.background, margin: 5}}>
-
             <View style={styles.viewStyle}>
                 <Text style={styles.titleStyle}>{course.name}</Text>
                 <Text style={styles.subtitleStyle}>by {course.teacher.firstName} {course.teacher.lastName}</Text>
@@ -41,18 +52,14 @@ export default function CourseDescription({navigation, course}){
             </View>
             <View style={styles.viewStyle}>
                 <TimeTableView
-                    //scrollViewRef={this.scrollViewRef}
-                    events={gotTimeslots}
-                    pivotTime={0}
-                    //pivotDate={this.pivotDate}
-                    numberOfDays={7}
-                    //onEventPress={this.onEventPress}
-                    //headerStyle={styles.headerStyle}
-                    formatDateHeader="dddd"
-                    locale="en-US"/>
+                  events={events}
+                  pivotTime={0}
+                  pivotEndTime={24}
+                  numberOfDays={7}
+                  formatDateHeader="ddd"
+                  headerStyle = {styles.headerStyle}
+                  locale="en-US"/>
             </View>
-
-
         </ScrollView>
     );
 }
@@ -85,13 +92,15 @@ const styles = StyleSheet.create({
         margin: 5,
     },
     viewStyle: {
-        marginBottom: 5,
-        marginTop: 5,
+        margin: 5,
         backgroundColor: Colors.primary,
         borderRadius: 4,
     },
     contentStyle: {
         justifyContent: "center",
         margin: 5,
-    }
+    },
+    headerStyle: {
+        backgroundColor: Colors.tabIconSelected
+    },
 })

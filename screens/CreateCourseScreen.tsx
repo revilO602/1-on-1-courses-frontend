@@ -53,9 +53,9 @@ export default function CreateCourseScreen({navigation}) {
         },
         body: JSON.stringify(data)
       });
-      console.log("hello")
       if (response.status === 201){
-        console.log("created")
+        navigation.navigate('CategoriesScreen')
+        alert('Course created', "Course successfully created")
       }
       else{
         const json = await response.json()
@@ -91,7 +91,6 @@ export default function CreateCourseScreen({navigation}) {
       startTime: `${hour.toString()}:${minute.toString().padStart(2, '0')}`
     }])
     if (overlaps.length > 0){
-      console.log(overlaps)
       let overlapsText = ''
       for (let timeslotPair of overlaps){
         overlapsText += `${timeslotPair[0].weekDay}, ${timeslotPair[0].startTime} and ${timeslotPair[1].weekDay}, ${timeslotPair[1].startTime}\n`
@@ -146,8 +145,6 @@ export default function CreateCourseScreen({navigation}) {
       categoryId: selectedCategory,
       timeslots: timeslots
     }
-    console.log(course)
-    console.log(JSON.stringify(course))
     await postCourse(course)
   }
 
@@ -191,7 +188,7 @@ export default function CreateCourseScreen({navigation}) {
             value={value}
             onBlur={onBlur}
             onChangeText={(value: any) => onChange(value)}
-            inputStyle={{minWidth: 300}}
+            inputStyle={{minWidth: 320}}
             errors={errors}
             name={"name"}
           />

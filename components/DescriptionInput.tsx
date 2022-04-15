@@ -12,6 +12,7 @@ export default function DescriptionInput({value, onBlur, onChangeText, errors}) 
         onBlur={onBlur}
         onChangeText={onChangeText}
         style={[styles.text, styles.input]}
+        multiline={true}
       />
       { errors["description"] && <Text style={styles.error}>{errors["description"].message}</Text>}
     </View>
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     minHeight: 200,
-    minWidth: 300
+    minWidth: 320
   },
   text: {
     fontSize: 18,

@@ -15,7 +15,7 @@ export default function CoursesStackNavigator() {
             <Stack.Screen name="CoursesScreen" component={CoursesScreen}
                           options={({ route }) => ({ title: `${route.params.name} courses` })}/>
             <Stack.Screen name="CourseDetailScreen" component={CourseDetailScreen}
-                          options={{ title: 'CourseDetailScreen' }}/>
+                          options={{ title: 'Course detail' }}/>
           <Stack.Screen name="CreateCourseScreen" component={CreateCourseScreen}
                         options={{ title: 'Create course' }}/>
         </Stack.Navigator>
