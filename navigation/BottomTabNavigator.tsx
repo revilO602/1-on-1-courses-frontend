@@ -7,6 +7,7 @@ import {StyleSheet, Text} from "react-native";
 import CoursesStackNavigator from "./CoursesStackNavigator";
 import TeacherStackNavigator from "./TeacherStackNavigator";
 import TimetableScreen from "../screens/TimetableScreen";
+import WebRTC from "../screens/WebRTC";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -61,6 +62,24 @@ export default function BottomTabNavigator() {
                         <Text style={[styles.text, focused ? styles.textfocused : styles.textunfocused]}>Timetable</Text>,
                 }}
             />
+          <BottomTab.Screen
+            name="WebRTC"
+            component={WebRTC}
+            options={{
+              tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,
+              tabBarLabel: ({color, focused}) =>
+                <Text style={[styles.text, focused ? styles.textfocused : styles.textunfocused]}>WebRTC</Text>,
+            }}
+          />
+          {/*<BottomTab.Screen*/}
+          {/*  name="Join"*/}
+          {/*  component={Join}*/}
+          {/*  options={{*/}
+          {/*    tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,*/}
+          {/*    tabBarLabel: ({color, focused}) =>*/}
+          {/*      <Text style={[styles.text, focused ? styles.textfocused : styles.textunfocused]}>Join</Text>,*/}
+          {/*  }}*/}
+          {/*/>*/}
         </BottomTab.Navigator>
     );
 }

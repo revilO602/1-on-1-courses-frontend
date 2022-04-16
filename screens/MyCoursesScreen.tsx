@@ -8,6 +8,7 @@ import {useEffect} from "react";
 
 
 export default function MyCoursesScreen({ navigation, route }) {
+
     const onPress = () => {
         //console.log(courses);
         //TODO tuto idem dorobit CourseDetail screen
