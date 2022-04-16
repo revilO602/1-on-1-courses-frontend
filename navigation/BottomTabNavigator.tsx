@@ -7,6 +7,7 @@ import {StyleSheet, Text} from "react-native";
 import CoursesStackNavigator from "./CoursesStackNavigator";
 import TeacherStackNavigator from "./TeacherStackNavigator";
 import TimetableScreen from "../screens/TimetableScreen";
+import StudentStackNavigator from "./StudentStackNavigator";
 import WebRTC from "../screens/WebRTC";
 
 const BottomTab = createBottomTabNavigator();
@@ -44,7 +45,7 @@ export default function BottomTabNavigator() {
             />
             <BottomTab.Screen
                 name="Student"
-                component={TestScreen}
+                component={StudentStackNavigator}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome5 name="user-graduate" size={24} color={color} />,

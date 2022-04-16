@@ -7,22 +7,6 @@ import {signedIn, email, password} from "../store/state";
 import Server from "../constants/Server";
 import {getTabBarHeight} from "@react-navigation/bottom-tabs/lib/typescript/src/views/BottomTabBar";
 
-const events_data = [
-    {
-        title: "Math",
-        startTime: genTimeBlock("MON", 9),
-        endTime: genTimeBlock("MON", 10, 50),
-        location: "Classroom 403",
-        extra_descriptions: ["Kim", "Lee"],
-    },
-    {
-        title: "Math",
-        startTime: genTimeBlock("WED", 9),
-        endTime: genTimeBlock("WED", 10, 50),
-        location: "Classroom 403",
-        extra_descriptions: ["Kim", "Lee"],
-    },
-];
 
 export default function TimetableScreen() {
     const [gotTimeslots, setTimeslots] = useState<any []>([]);
