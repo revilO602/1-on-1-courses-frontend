@@ -5,34 +5,16 @@ import * as React from "react";
 import Colors from "../constants/Colors";
 import SubmitButton from "./SubmitButton";
 
-export default function TimeslotJoiner({ setModalVisible, joinTimeslot, events}) {
-  const [selectedEvent, setSelectedEvent] = useState(events[0]);
-
-  const renderTimeslots = () => {
-    const items = []
-    for (let event of events){
-      const label = `${event.timeslot.weekDay}, ${event.timeslot.startTime}`
-      items.push(<Picker.Item label={label} value={event} key={label}/>)
-    }
-    return items
-  }
+export default function TimeslotJoiner({ setModalVisible, joinTimeslot, event, courseName}) {
   return(
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Text style={styles.heading}>Delete timeslot</Text>
-        <Text style={styles.subheading}>Every lesson lasts 60 minutes!</Text>
-        <Text style={styles.subsubheading}>Pick timeslot</Text>
-        <View style={styles.picker}>
-          <Picker
-            selectedValue={selectedEvent}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedEvent(itemValue)
-            }>
-            {renderTimeslots()}
-          </Picker>
-        </View>
+        <Text style={styles.heading}>Join timeslot</Text>
+        <Text style={styles.subheading}>Reserve this timeslot for your lesson?</Text>
+        <Text style={styles.subheading}>{event.timeslot.weekDay}, {event.title}</Text>
+        <Text style={styles.subsubheading}>You can choose multiple timeslots per course!</Text>
         <SubmitButton
-          onPress={() => deleteTimeslot(selectedEvent)}
+          onPress={() => joinTimeslot(event)}
           text={"Confirm"}/>
         <SubmitButton
           onPress={() => setModalVisible(false)}
@@ -79,18 +61,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginVertical: 5,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
@@ -99,10 +69,5 @@ const styles = StyleSheet.create({
   modalText: {
     marginVertical: 5,
     textAlign: 'left',
-  },
-  picker: {
-    borderWidth: 1,
-    borderRadius: 20,
-    marginBottom: 5
-  },
+  }
 });

@@ -1,4 +1,4 @@
-import {ActivityIndicator, ScrollView, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, Alert, Modal, ScrollView, StyleSheet, Text, View} from "react-native";
 import CourseDescription from "../components/CourseDescription";
 import React, {useEffect, useState} from "react";
 import Server from "../constants/Server";
@@ -7,9 +7,11 @@ import { encode } from "base-64";
 import alert from "../components/alert";
 import Colors from "../constants/Colors";
 
+
 export default function CourseDetailScreen({navigation, route}) {
   const [course, setCourse] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [events, setEvents] = useState([]);
 
   const joinTimeslot = async (data)=>{
     try {
@@ -22,7 +24,7 @@ export default function CourseDetailScreen({navigation, route}) {
         body: JSON.stringify([{id: data.timeslot.id}])
       });
       if (response.status === 200){
-        alert('Cuuu', "Cuuu")
+        setEvents(events.filter(ev => ev.timeslot !== data.timeslot))
       }
       else{
         const json = await response.json()
@@ -54,7 +56,6 @@ export default function CourseDetailScreen({navigation, route}) {
       });
       const json = await response.json();
       setCourse(json);
-      console.log(json)
     } catch (error) {
       console.error(error);
       alert('Server error', 'SERVER ERROR')
@@ -62,7 +63,19 @@ export default function CourseDetailScreen({navigation, route}) {
       setLoading(false);
     }
   }
-
+  const showJoinConfirmation = (event) => {
+    Alert.alert("Reserve this timeslot for your lesson?",
+      `${event.timeslot.weekDay}, ${event.title}\n\nYou can choose multiple timeslots per course!`, [
+        {
+          text: 'Confirm',
+          onPress: () => joinTimeslot(event),
+        },
+        {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ]);
+  }
   useEffect( () =>{
      fetchCourse()
   },[])
@@ -71,7 +84,8 @@ export default function CourseDetailScreen({navigation, route}) {
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps={"always"}>
         {isLoading ? <ActivityIndicator/> : (
           <>
-            <CourseDescription navigation={navigation} course={course} onEventPress={joinTimeslot}/>
+            <CourseDescription navigation={navigation} course={course} onEventPress={showJoinConfirmation}
+                               events={events} setEvents={setEvents}/>
             <Text style={styles.bottomText}>Tap on a timeslot to reserve it for your 1-on-1 lesson!</Text>
           </>
         )}

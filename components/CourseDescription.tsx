@@ -4,8 +4,7 @@ import Colors from "../constants/Colors";
 import {WEEK_DAYS} from "../constants/Weekdays";
 import TimeTableView, { genTimeBlock } from 'react-native-timetable';
 
-export default function CourseDescription({navigation, course, onEventPress=null}){
-    const [events, setEvents] = useState([]);
+export default function CourseDescription({ course, onEventPress=null, events, setEvents}){
 
     const createEvents = () =>{
         setEvents(course.timeslots.map((timeslot: any) => {
