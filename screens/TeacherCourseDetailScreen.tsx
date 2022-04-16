@@ -1,4 +1,4 @@
-import {ActivityIndicator, Alert, Modal, ScrollView, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, ScrollView, StyleSheet, View, LogBox } from "react-native";
 import CourseDescription from "../components/CourseDescription";
 import React, {useEffect, useState} from "react";
 import Server from "../constants/Server";
@@ -13,7 +13,9 @@ export default function TeacherCourseDetailScreen({navigation, route}) {
   const [course, setCourse] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
   const fetchCourse = async () => {
     try {
       const response = await fetch(`${Server.url}/teacher/courses/${route.params.courseId}`,{
@@ -35,8 +37,33 @@ export default function TeacherCourseDetailScreen({navigation, route}) {
     fetchCourse()
   },[])
 
-  const deleteCourse = () =>{
-    console.log('delete')
+  const deleteCourse = async () =>{
+    try {
+      const response = await fetch(`${Server.url}/courses/${route.params.courseId}`,{
+        method: 'DELETE',
+        headers: new Headers({
+          'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
+        }),
+      });
+      if (response.status === 204){
+        route.params.setCourses(route.params.courses.filter(c => c.id !== route.params.courseId))
+        navigation.navigate('TeacherCoursesScreen')
+        alert('Course deleted', "Course successfully deleted")
+      }
+      else{
+        const json = await response.json()
+        let errors = ''
+        for (var key of Object.keys(json)) {
+          errors = errors + `${json[key]}\n`
+        }
+        alert("Error", errors)
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Server error', 'SERVER ERROR')
+    } finally {
+      setLoading(false);
+    }
   }
 
   const editCourse = () =>{

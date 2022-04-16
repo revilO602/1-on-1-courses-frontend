@@ -42,7 +42,8 @@ export default function TeacherCoursesScreen({ navigation, route }) {
                     <FlatList
                         data={courses}
                         renderItem={({ item }) => (
-                            <CourseButton navigation={navigation} course={item} key={item.id} nextScreen={'TeacherCourseDetailScreen'}/>
+                            <CourseButton navigation={navigation} course={item} key={item.id}
+                                          courses={courses} setCourses={setCourses} nextScreen={'TeacherCourseDetailScreen'}/>
                         )}
                     />
                 </View>

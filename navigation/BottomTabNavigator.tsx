@@ -65,6 +65,12 @@ export default function BottomTabNavigator() {
           <BottomTab.Screen
             name="WebRTC"
             component={WebRTC}
+            listeners={{
+              tabPress: e => {
+                e.preventDefault();
+                console.log("hello") // tu bude potom log out
+              }
+            }}
             options={{
               tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,
               tabBarLabel: ({color, focused}) =>
