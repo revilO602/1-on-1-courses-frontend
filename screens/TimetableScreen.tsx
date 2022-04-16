@@ -59,9 +59,11 @@ export default function TimetableScreen() {
                 const endHour = parseInt(time) + 1
 
                 return {
-                    title: ` Teaching ${time.substring(0, 2)} - ${endHour.toString()}`,
+                    title: `${time.substring(0, 2)} - ${endHour.toString()}`,
                     startTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2))}`),
                     endTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2)) + 1}`, 50),
+                    extra_descriptions: ["Teaching"],
+                    location: "App",
                 }
             }));
         }
@@ -73,9 +75,11 @@ export default function TimetableScreen() {
                     const endHour = parseInt(time) + 1
 
                     return {
-                        title: ` Schooling ${time.substring(0, 2)} - ${endHour.toString()}`,
+                        title: `${time.substring(0, 2)} - ${endHour.toString()}`,
                         startTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2))}`),
                         endTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2)) + 1}`, 50),
+                        extra_descriptions: ["Schooling"],
+                        location: "App",
                     }
                 }));
         }

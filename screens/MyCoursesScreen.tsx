@@ -1,10 +1,11 @@
-import {Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, FlatList, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import Colors from "../constants/Colors";
 import Server from "../constants/Server";
 import {email, password} from "../store/state";
 import alert from "../components/alert";
 import { encode } from "base-64";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import CourseButton from "../components/CourseButton";
 
 
 export default function MyCoursesScreen({ navigation, route }) {
@@ -13,7 +14,8 @@ export default function MyCoursesScreen({ navigation, route }) {
         //TODO tuto idem dorobit CourseDetail screen
         navigation.navigate('CourseDetailScreen', { course })
     }
-
+    const [courses, setCourses] = useState([]);
+    const [isLoading, setLoading] = useState(true);
 
     const fetchCourses = async () => {
         try {
@@ -39,21 +41,17 @@ export default function MyCoursesScreen({ navigation, route }) {
     }, []);
 
     return (
-        <View style={{flex: 1}}>
-            <ScrollView contentContainerStyle={{backgroundColor: Colors.background, margin: 5}}>
-                    <Text style={styles.titleStyle}>My Courses</Text>
-                    <Pressable style={({ pressed }) => [
-                        {
-                            backgroundColor: pressed ? Colors.tabIconSelected : Colors.primary,
-                        },
-                        styles.button,
-                    ]}
-                               onPress={onPress}>
-                        <Text style={styles.titleStyle}>Dajaky kurz</Text>
-                        <Text style={styles.subtitleStyle}>Dajaky autor</Text>
-
-                    </Pressable>
-            </ScrollView>
+        <View>
+            {isLoading ? <ActivityIndicator/> : (
+                <View>
+                    <FlatList
+                        data={courses}
+                        renderItem={({ item }) => (
+                            <CourseButton navigation={navigation} course={item} key={item.id}/>
+                        )}
+                    />
+                </View>
+            )}
         </View>
     );
 }
