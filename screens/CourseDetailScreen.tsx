@@ -81,7 +81,8 @@ export default function CourseDetailScreen({navigation, route}) {
   },[])
 
   return (
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps={"always"}>
+    <View style={styles.container}>
+      <ScrollView keyboardShouldPersistTaps={"always"}>
         {isLoading ? <ActivityIndicator/> : (
           <>
             <CourseDescription navigation={navigation} course={course} onEventPress={showJoinConfirmation}
@@ -90,11 +91,13 @@ export default function CourseDetailScreen({navigation, route}) {
           </>
         )}
       </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
+    flex:1
   },
   bottomText: {
     color: Colors.tabIconSelected,

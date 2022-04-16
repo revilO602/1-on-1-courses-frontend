@@ -7,11 +7,10 @@ import {
 import Colors from "../constants/Colors";
 import React from "react";
 
-export default function CourseButton({ navigation, course }) {
+export default function CourseButton({ navigation, course, nextScreen }) {
     const onPress = () => {
-        navigation.navigate('CourseDetailScreen', { courseId: course.id })
+        navigation.navigate(nextScreen, { courseId: course.id })
     }
-
     return (
             <Pressable style={({ pressed }) => [
                 {

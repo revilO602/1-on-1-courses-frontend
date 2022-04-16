@@ -35,13 +35,13 @@ export default function Courses({ navigation, props }) {
     }, []);
 
     return (
-        <View>
+        <View style={styles.container} >
             {isLoading ? <ActivityIndicator/> : (
                 <View>
                     <FlatList
                         data={courses}
                         renderItem={({ item }) => (
-                            <CourseButton navigation={navigation} course={item} key={item.id}/>
+                            <CourseButton navigation={navigation} course={item} key={item.id} nextScreen={'CourseDetailScreen'}/>
                         )}
                     />
                 </View>
@@ -49,3 +49,9 @@ export default function Courses({ navigation, props }) {
         </View>
     );
 }
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: Colors.background,
+        flex: 1
+    },
+});

@@ -8,13 +8,7 @@ import {useEffect, useState} from "react";
 import CourseButton from "../components/CourseButton";
 
 
-export default function MyCoursesScreen({ navigation, route }) {
-
-    const onPress = () => {
-        //console.log(courses);
-        //TODO tuto idem dorobit CourseDetail screen
-        navigation.navigate('CourseDetailScreen', { course })
-    }
+export default function TeacherCoursesScreen({ navigation, route }) {
     const [courses, setCourses] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -42,13 +36,13 @@ export default function MyCoursesScreen({ navigation, route }) {
     }, []);
 
     return (
-        <View>
+        <View style={styles.container}>
             {isLoading ? <ActivityIndicator/> : (
                 <View>
                     <FlatList
                         data={courses}
                         renderItem={({ item }) => (
-                            <CourseButton navigation={navigation} course={item} key={item.id}/>
+                            <CourseButton navigation={navigation} course={item} key={item.id} nextScreen={'TeacherCourseDetailScreen'}/>
                         )}
                     />
                 </View>
@@ -71,12 +65,8 @@ const styles = StyleSheet.create({
         margin: 5,
     },
     container: {
-        // flex: 1,
-        margin: 5,
-        alignItems: 'flex-start',
-        justifyContent: 'center',
+        flex: 1,
         backgroundColor: Colors.background,
-        flexDirection: 'column',
     },
     descriptionStyle: {
         fontSize: 22,
