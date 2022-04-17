@@ -15,8 +15,8 @@ export default function BottomTabNavigator() {
     return (
         <BottomTab.Navigator
             initialRouteName="Courses"
-            backBehavior='history'
             screenOptions={{
+                unmountOnBlur: true,
                 tabBarActiveTintColor: Colors.tabIconSelected, tabBarInactiveTintColor: Colors.tabIconDefault,
                 tabBarStyle: {
                     paddingVertical: 3,
@@ -36,6 +36,7 @@ export default function BottomTabNavigator() {
                 name="Teacher"
                 component={TeacherStackNavigator}
                 options={{
+                    unmountOnBlur: true,
                     headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome5 name="chalkboard-teacher" size={24} color={color} />,
                     tabBarLabel: ({color, focused}) =>
@@ -46,6 +47,7 @@ export default function BottomTabNavigator() {
                 name="Student"
                 component={TestScreen}
                 options={{
+                    unmountOnBlur: true,
                     headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome5 name="user-graduate" size={24} color={color} />,
                     tabBarLabel: ({color, focused}) =>
@@ -56,6 +58,7 @@ export default function BottomTabNavigator() {
                 name="Timetable"
                 component={TimetableScreen}
                 options={{
+                    unmountOnBlur: true,
                     headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,
                     tabBarLabel: ({color, focused}) =>
@@ -65,12 +68,12 @@ export default function BottomTabNavigator() {
           <BottomTab.Screen
             name="WebRTC"
             component={WebRTC}
-            listeners={{
-              tabPress: e => {
-                e.preventDefault();
-                console.log("hello") // tu bude potom log out
-              }
-            }}
+            // listeners={{
+            //   tabPress: e => {
+            //     e.preventDefault();
+            //     console.log("hello") // tu bude potom log out
+            //   }
+            // }}
             options={{
               tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,
               tabBarLabel: ({color, focused}) =>

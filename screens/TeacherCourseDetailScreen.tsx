@@ -7,6 +7,7 @@ import { encode } from "base-64";
 import alert from "../components/alert";
 import Colors from "../constants/Colors";
 import SubmitButton from "../components/SubmitButton";
+import {useFocusEffect, useIsFocused} from "@react-navigation/native";
 
 
 export default function TeacherCourseDetailScreen({navigation, route}) {
@@ -33,9 +34,14 @@ export default function TeacherCourseDetailScreen({navigation, route}) {
     }
   }
 
-  useEffect( () =>{
-    fetchCourse()
-  },[])
+  useFocusEffect( () =>{
+    navigation.addListener(
+      'focus',
+      () => {
+        fetchCourse()
+      }
+    );
+  })
 
   const deleteCourse = async () =>{
     try {
@@ -67,15 +73,18 @@ export default function TeacherCourseDetailScreen({navigation, route}) {
   }
 
   const editCourse = () =>{
-    console.log('edit')
+    navigation.navigate('EditCourseScreen', {course: course, events: events, setEvents: setEvents})
+    setLoading(true)
   }
 
   const goToStudents = () =>{
     console.log('s')
+    setLoading(true)
   }
 
   const goToMaterials = () =>{
     console.log('m')
+    setLoading(true)
   }
 
   return (

@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import Colors from "../constants/Colors";
-import { getFirestore, setDoc, doc, collection, onSnapshot, addDoc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc, collection, onSnapshot, addDoc, getDoc } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -29,10 +29,9 @@ const configuration = {
 };
 
 export default function CallScreen({ navigation, screens, roomId=1 }) {
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const firestore = getFirestore(app);
+  const [firestore, setFirestore] = useState()
 
+  // Initialize Firebase
   function onBackPress() {
     if (cachedLocalPC) {
       cachedLocalPC.removeStream(localStream);
@@ -52,7 +51,8 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
   const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
-    // startLocalStream();
+    const app = initializeApp(firebaseConfig);
+    setFirestore(getFirestore(app)) ;
   }, []);
 
   const startLocalStream = async () => {
@@ -83,8 +83,9 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
     const localPC = new RTCPeerConnection(configuration);
     localPC.addStream(localStream);
     console.log("0")
-    const roomRef = await addDoc(collection(firestore, 'rooms'),{dummy: 'im a dumdum'})
+    const roomRef = await getDoc(doc(firestore, 'rooms/31V6jw9sJlo3mSFiHDwY'))
     console.log("1")
+    console.log(roomRef)
     const callerCandidatesCollection = collection( firestore, `rooms/${id}/callerCandidates`);
     console.log("2")
     localPC.onicecandidate = e => {
