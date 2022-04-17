@@ -14,7 +14,7 @@ export default function TimetableScreen() {
     const fetchData = async () => {
         try {
             const response = await fetch(`${Server.url}/timetable`, {
-                method: "GET",
+                //method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic ' + encode(`${email.get()}:${password.get()}`),
@@ -24,7 +24,7 @@ export default function TimetableScreen() {
                 if (response.status === 200) {
                     const json = await response.json();
 
-                    modifyData(json.teacherTimeslots[0], json.studentTimeslots[0])
+                    modifyData(json.teacherTimeslots[0], json.studentTimeslots[0]);
 
                 } else {
                     alert("Invalid credentials")
@@ -37,6 +37,7 @@ export default function TimetableScreen() {
     const modifyData = (teacher: any, student: any) => {
         const arr = [];
         if (teacher != undefined) {
+            console.log(teacher);
             arr.push(...teacher.map((timeslot: any) => {
                 const time = timeslot.startTime;
                 const weekday = timeslot.weekDay.substring(0, 3).toUpperCase();
@@ -53,6 +54,7 @@ export default function TimetableScreen() {
         }
 
         if (student != undefined) {
+            console.log(student);
             arr.push(...student.map((timeslot: any) => {
                     const time = timeslot.startTime;
                     const weekday = timeslot.weekDay.substring(0, 3).toUpperCase();

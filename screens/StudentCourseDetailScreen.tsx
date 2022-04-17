@@ -14,6 +14,32 @@ export default function StudentCourseDetailScreen({navigation, route}) {
     const [isLoading, setLoading] = useState(true);
     const [events, setEvents] = useState([]);
 
+    const removeTimeslot = async () => {
+        console.log("som tu");
+        try {
+            const response = await fetch (`${Server.url}/courses/leave`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
+                },
+                body: JSON.stringify({timeslots: [{id: route.params.id}]})
+
+            })
+            console.log(response.status);
+            if (response.status === 200) {
+                const json = await response.json();
+                console.log(json);
+                navigation.navigate("StudentCoursesScreen");
+            }
+
+        } catch (error) {
+            console.log(error)
+            alert("Server error", "SERVER ERROR");
+        }
+
+    }
+
     const fetchCourse = async () => {
         try {
             const response = await fetch(`${Server.url}/student/courses/${route.params.courseId}`,{
@@ -41,7 +67,6 @@ export default function StudentCourseDetailScreen({navigation, route}) {
     }
 
     const leaveCourse = () =>{
-        console.log('s')
         Alert.alert(
             "Leaving course",
             "Are you sure you want to leave course ?",
@@ -53,8 +78,8 @@ export default function StudentCourseDetailScreen({navigation, route}) {
                 },
                 {
                     text: "OK",
-                    onPress: () => Alert.alert("As you wish"),
-                    //style: "default",
+                    onPress: () => removeTimeslot(),
+
                 }
             ],
             {
