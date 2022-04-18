@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react';
 import {ScrollView, StyleSheet, Text, View} from "react-native";
 import Colors from "../constants/Colors";
 import { encode } from "base-64";
-import {signedIn, email, password} from "../store/state";
+import {email, password} from "../store/state";
 import Server from "../constants/Server";
-import {getTabBarHeight} from "@react-navigation/bottom-tabs/lib/typescript/src/views/BottomTabBar";
 
 
 export default function TimetableScreen() {

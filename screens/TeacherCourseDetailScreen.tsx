@@ -78,13 +78,11 @@ export default function TeacherCourseDetailScreen({navigation, route}) {
   }
 
   const goToStudents = () =>{
-    console.log('s')
-    setLoading(true)
+    navigation.navigate('StudentsScreen', {courseId: course.id})
   }
 
   const goToMaterials = () =>{
-    console.log('m')
-    setLoading(true)
+    navigation.navigate('TeacherMaterialsScreen', {courseId: course.id})
   }
 
   return (
@@ -94,16 +92,16 @@ export default function TeacherCourseDetailScreen({navigation, route}) {
           <>
             <CourseDescription course={course} onEventPress={null}
                                events={events} setEvents={setEvents}/>
+            <View style={styles.buttonsRow}>
+              <SubmitButton text={"Students"} buttonStyle={styles.button} onPress={goToStudents}/>
+              <SubmitButton text={"Materials"} buttonStyle={styles.button} onPress={goToMaterials}/>
+            </View>
+            <View style={styles.buttonsRow}>
+              <SubmitButton text={"Edit course"} buttonStyle={styles.button} onPress={editCourse}/>
+              <SubmitButton text={"Delete course"} buttonStyle={styles.button} onPress={deleteCourse}/>
+            </View>
           </>
         )}
-        <View style={styles.buttonsRow}>
-          <SubmitButton text={"Students"} buttonStyle={styles.button} onPress={goToStudents}/>
-          <SubmitButton text={"Materials"} buttonStyle={styles.button} onPress={goToMaterials}/>
-        </View>
-        <View style={styles.buttonsRow}>
-          <SubmitButton text={"Edit course"} buttonStyle={styles.button} onPress={editCourse}/>
-          <SubmitButton text={"Delete course"} buttonStyle={styles.button} onPress={deleteCourse}/>
-        </View>
       </ScrollView>
     </View>
   );

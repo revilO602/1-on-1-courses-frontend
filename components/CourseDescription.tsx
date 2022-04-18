@@ -27,12 +27,16 @@ export default function CourseDescription({ course, onEventPress=null, events, s
                 endHour = startHour + 1
                 endDayShort = startDayShort
             }
-            return {
-                title: `${startHour.toString()}:${startMinute.toString().padStart(2, '0')} - ${endHour.toString()}:${startMinute.toString().padStart(2, '0')}`,
+            let newEvent = {
+                title: `${startHour.toString()}:${startMinute.toString().padStart(2, '0')}`,
                 startTime: genTimeBlock(startDayShort, startHour, startMinute),
                 endTime:  genTimeBlock(endDayShort, endHour, startMinute),
                 timeslot: timeslot
             }
+            if (timeslot.studentId){
+                newEvent["location"] = `${timeslot.student.firstName[0]}.${timeslot.student.lastName}`
+            }
+            return newEvent
         }))
     }
 

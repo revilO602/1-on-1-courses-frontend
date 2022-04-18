@@ -1,5 +1,13 @@
 import { createState } from '@hookstate/core';
 
-export const signedIn = createState(true)
-export const email = createState("student1@login.sk")
-export const password = createState('heslo')
+export const signedIn = createState(false)
+export const email = createState("")
+export const password = createState('')
+export const userId = createState('')
+
+export const logOut = () => {
+  signedIn.set(false)
+  email.set('')
+  password.set('')
+  userId.set('')
+}

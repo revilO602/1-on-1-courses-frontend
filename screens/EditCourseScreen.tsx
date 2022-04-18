@@ -57,7 +57,7 @@ export default function EditCourseScreen({navigation, route}) {
       });
       if (response.status === 204){
         navigation.navigate('TeacherCoursesScreen')
-        alert('Course created', "Course successfully created")
+        alert('Course edited', "Course successfully edited")
       }
       else{
         const json = await response.json()

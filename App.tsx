@@ -1,8 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import {LogBox, View} from 'react-native';
 import Navigation from './navigation';
 
 export default function App() {
+  LogBox.ignoreLogs([
+    'Possible Unhandled Promise Rejection',
+  ]);
   return (
     <>
       <Navigation/>

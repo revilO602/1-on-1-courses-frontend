@@ -2,13 +2,12 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {FontAwesome5} from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import * as React from "react";
-import TestScreen from "../screens/TestScreen";
 import {StyleSheet, Text} from "react-native";
 import CoursesStackNavigator from "./CoursesStackNavigator";
 import TeacherStackNavigator from "./TeacherStackNavigator";
 import TimetableScreen from "../screens/TimetableScreen";
 import StudentStackNavigator from "./StudentStackNavigator";
-import WebRTC from "../screens/WebRTC";
+import {logOut} from "../store/state";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -67,29 +66,20 @@ export default function BottomTabNavigator() {
                 }}
             />
           <BottomTab.Screen
-            name="WebRTC"
-            component={WebRTC}
-            // listeners={{
-            //   tabPress: e => {
-            //     e.preventDefault();
-            //     console.log("hello") // tu bude potom log out
-            //   }
-            // }}
+            name="SignOut"
+            component={TimetableScreen}
+            listeners={{
+              tabPress: e => {
+                e.preventDefault();
+                logOut()
+              }
+            }}
             options={{
-              tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,
+              tabBarIcon: ({ color }) => <FontAwesome5 name="sign-out-alt" size={24} color={color} />,
               tabBarLabel: ({color, focused}) =>
-                <Text style={[styles.text, focused ? styles.textfocused : styles.textunfocused]}>WebRTC</Text>,
+                <Text style={[styles.text, focused ? styles.textfocused : styles.textunfocused]}>Log out</Text>,
             }}
           />
-          {/*<BottomTab.Screen*/}
-          {/*  name="Join"*/}
-          {/*  component={Join}*/}
-          {/*  options={{*/}
-          {/*    tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,*/}
-          {/*    tabBarLabel: ({color, focused}) =>*/}
-          {/*      <Text style={[styles.text, focused ? styles.textfocused : styles.textunfocused]}>Join</Text>,*/}
-          {/*  }}*/}
-          {/*/>*/}
         </BottomTab.Navigator>
     );
 }

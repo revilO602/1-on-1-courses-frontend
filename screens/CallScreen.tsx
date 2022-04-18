@@ -1,23 +1,9 @@
-import { initializeApp } from "firebase/app";
-import Colors from "../constants/Colors";
-import { getFirestore, setDoc, doc, collection, onSnapshot, addDoc, getDoc } from 'firebase/firestore';
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCCcNAhdqMSvFemFcy7SDcViZ6zPn4wj1s",
-  authDomain: "one-on-one-courses-webrtc.firebaseapp.com",
-  projectId: "one-on-one-courses-webrtc",
-  storageBucket: "one-on-one-courses-webrtc.appspot.com",
-  messagingSenderId: "484026413058",
-  appId: "1:484026413058:web:8d95e5c091e16ba0edf71b"
-};
-
-
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, Button, View } from 'react-native';
 
 import { RTCPeerConnection, RTCView, mediaDevices, RTCIceCandidate, RTCSessionDescription } from 'react-native-webrtc';
-//import { db } from '../utilities/firebase';
+import { db } from '../utilities/firebase';
+import Colors from "../constants/Colors";
 
 const configuration = {
   iceServers: [
@@ -28,10 +14,8 @@ const configuration = {
   iceCandidatePoolSize: 10,
 };
 
-export default function CallScreen({ navigation, screens, roomId=1 }) {
-  const [firestore, setFirestore] = useState()
+export default function CallScreen({ navigation, route }) {
 
-  // Initialize Firebase
   function onBackPress() {
     if (cachedLocalPC) {
       cachedLocalPC.removeStream(localStream);
@@ -51,8 +35,7 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
   const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
-    const app = initializeApp(firebaseConfig);
-    setFirestore(getFirestore(app)) ;
+    // startLocalStream();
   }, []);
 
   const startLocalStream = async () => {
@@ -82,19 +65,14 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
   const startCall = async id => {
     const localPC = new RTCPeerConnection(configuration);
     localPC.addStream(localStream);
-    console.log("0")
-    const roomRef = await getDoc(doc(firestore, 'rooms/31V6jw9sJlo3mSFiHDwY'))
-    console.log("1")
-    console.log(roomRef)
-    const callerCandidatesCollection = collection( firestore, `rooms/${id}/callerCandidates`);
-    console.log("2")
+    const roomRef = await db.collection('rooms').doc(id);
+    const callerCandidatesCollection = roomRef.collection('callerCandidates');
     localPC.onicecandidate = e => {
       if (!e.candidate) {
         console.log('Got final candidate!');
         return;
       }
-      const newCallerDoc = doc(callerCandidatesCollection);
-      setDoc(newCallerDoc, e.candidate.toJSON())
+      callerCandidatesCollection.add(e.candidate.toJSON());
     };
 
     localPC.onaddstream = e => {
@@ -108,9 +86,9 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
     await localPC.setLocalDescription(offer);
 
     const roomWithOffer = { offer };
-    await setDoc(roomRef, roomWithOffer);
+    await roomRef.set(roomWithOffer);
 
-    onSnapshot(roomRef,async snapshot => {
+    roomRef.onSnapshot(async snapshot => {
       const data = snapshot.data();
       if (!localPC.currentRemoteDescription && data.answer) {
         const rtcSessionDescription = new RTCSessionDescription(data.answer);
@@ -118,7 +96,7 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
       }
     });
 
-    onSnapshot(collection(roomRef, 'calleeCandidates'), snapshot => {
+    roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
       snapshot.docChanges().forEach(async change => {
         if (change.type === 'added') {
           let data = change.doc.data();
@@ -148,24 +126,21 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
 
 
   return (
-    <>
-      <Text style={styles.heading} >Call Screen</Text>
-      <Text style={styles.heading} >Room : {roomId}</Text>
-
+    <View style={styles.container}>
       <View style={styles.callButtons} >
         <View styles={styles.buttonContainer} >
-          <Button title="Click to stop call" onPress={onBackPress} />
+          <Button color={Colors.tabIconDefault} title="Click to stop call" onPress={onBackPress} />
         </View>
         <View styles={styles.buttonContainer} >
-          {!localStream && <Button title='Click to start stream' onPress={startLocalStream} />}
-          {localStream && <Button title='Click to start call' onPress={() => startCall(roomId)} disabled={!!remoteStream} />}
+          {!localStream && <Button color={Colors.tabIconDefault} title='Click to start stream' onPress={startLocalStream} />}
+          {localStream && <Button color={Colors.tabIconDefault} title='Click to start call' onPress={() => startCall(route.params.roomId)} disabled={!!remoteStream} />}
         </View>
       </View>
 
       {localStream && (
         <View style={styles.toggleButtons}>
-          <Button title='Switch camera' onPress={switchCamera} />
-          <Button title={`${isMuted ? 'Unmute' : 'Mute'} stream`} onPress={toggleMute} disabled={!remoteStream} />
+          <Button color={Colors.tabIconDefault} title='Switch camera' onPress={switchCamera} />
+          <Button color={Colors.tabIconDefault} title={`${isMuted ? 'Unmute' : 'Mute'} stream`} onPress={toggleMute} disabled={!remoteStream} />
         </View>
       )}
 
@@ -178,11 +153,15 @@ export default function CallScreen({ navigation, screens, roomId=1 }) {
         </View>
       </View>
 
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+    backgroundColor: Colors.background
+  },
   heading: {
     alignSelf: 'center',
     fontSize: 30,

@@ -11,7 +11,7 @@ import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
 import Server from "../constants/Server";
 import { encode } from "base-64";
-import {signedIn, email, password} from "../store/state";
+import {signedIn, email, password, userId} from "../store/state";
 import alert from "../components/alert";
 
 type FormData = {
@@ -30,7 +30,6 @@ export default function LoginScreen({navigation}){
   } = useForm({mode: 'onBlur'})
 
   const onSubmit = (data: FormData) => {
-    console.log(data)
     sendForm(data)
   }
   const sendForm = async (data) => {
@@ -44,8 +43,10 @@ export default function LoginScreen({navigation}){
         body: JSON.stringify(data)
       });
       if (response.status === 200) {
+        const json = await response.json()
         email.set(data.email)
         password.set(data.password)
+        userId.set(json.id)
         signedIn.set(true)
       } else {
         alert("Error", "Invalid credentials")

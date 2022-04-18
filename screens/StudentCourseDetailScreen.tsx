@@ -2,7 +2,7 @@ import {ActivityIndicator, Alert, Modal, ScrollView, StyleSheet, Text, View} fro
 import CourseDescription from "../components/CourseDescription";
 import React, {useEffect, useState} from "react";
 import Server from "../constants/Server";
-import {email, password} from "../store/state";
+import {email, password, userId} from "../store/state";
 import { encode } from "base-64";
 import alert from "../components/alert";
 import Colors from "../constants/Colors";
@@ -37,7 +37,7 @@ export default function StudentCourseDetailScreen({navigation, route}) {
 
 
     const callTeacher = () =>{
-        console.log('edit')
+        navigation.navigate('JoinCallScreen', {roomId: `course${course.id}-student${userId.get()}`})
     }
 
     const leaveCourse = () =>{
