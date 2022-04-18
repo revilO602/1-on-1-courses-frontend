@@ -6,6 +6,7 @@ import alert from "../components/alert";
 import { encode } from "base-64";
 import {useEffect, useState} from "react";
 import CourseButton from "../components/CourseButton";
+import {useFocusEffect} from "@react-navigation/native";
 
 
 export default function StudentCoursesScreen({ navigation, route }) {
@@ -31,9 +32,14 @@ export default function StudentCoursesScreen({ navigation, route }) {
         }
     }
 
-    useEffect(() => {
-        fetchCourses()
-    }, []);
+    useFocusEffect( () =>{
+        navigation.addListener(
+          'focus',
+          () => {
+              fetchCourses()
+          }
+        );
+    })
 
     return (
         <View style={styles.container}>
@@ -42,7 +48,8 @@ export default function StudentCoursesScreen({ navigation, route }) {
                     <FlatList
                         data={courses}
                         renderItem={({ item }) => (
-                            <CourseButton navigation={navigation} course={item} key={item.id} nextScreen={'StudentCourseDetailScreen'}/>
+                            <CourseButton navigation={navigation} course={item} key={item.id}
+                                          nextScreen={'StudentCourseDetailScreen'} setLoading={setLoading}/>
                         )}
                     />
                 </View>
@@ -92,5 +99,6 @@ const styles = StyleSheet.create({
         elevation: 3,
         minWidth: 400,
         minHeight: 50,
-    }
+    },
+
 })

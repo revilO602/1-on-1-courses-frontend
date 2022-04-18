@@ -80,6 +80,7 @@ export default function TeacherMaterialsScreen({ route }) {
         }}>
         <MaterialAdder setModalVisible={setModalVisible} uploadFile={uploadFile}/>
       </Modal>
+      <Text style={styles.bottomText}>Tap on a material to download it!</Text>
       <Materials courseId={route.params.courseId} key={materialsKey}/>
       <View style={styles.buttonContainer}>
         <SubmitButton text={"Upload new material"} onPress={showModal}/>
@@ -98,5 +99,13 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: 15,
     marginBottom: 5
+  },
+  bottomText: {
+    color: Colors.tabIconSelected,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginHorizontal: 10,
+    marginBottom: 10,
+    fontSize: 20
   }
 });

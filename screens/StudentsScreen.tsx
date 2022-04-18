@@ -6,6 +6,7 @@ import Server from "../constants/Server";
 import alert from "../components/alert";
 import { email, password} from "../store/state";
 import StudentButton from "../components/StudentButton";
+import * as React from "react";
 
 export default function StudentsScreen({ navigation, route }) {
   const [isLoading, setLoading] = useState(true);
@@ -38,6 +39,7 @@ export default function StudentsScreen({ navigation, route }) {
     <View style={styles.container} >
       {isLoading ? <ActivityIndicator/> : (
         <View>
+          <Text style={styles.bottomText}>Tap on a student to start a call for them to join!</Text>
           <FlatList
             data={students}
             renderItem={({ item }) => (
@@ -54,4 +56,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     flex: 1
   },
+  bottomText: {
+    color: Colors.tabIconSelected,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginHorizontal: 10,
+    marginBottom: 10,
+    fontSize: 20
+  }
 });

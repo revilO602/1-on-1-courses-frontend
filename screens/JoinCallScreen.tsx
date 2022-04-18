@@ -126,6 +126,7 @@ export default function JoinScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
+      {!remoteStream && <Text style={styles.bottomText}>You can only join a call if the teacher started it</Text>}
       <View style={styles.callButtons} >
         <View styles={styles.buttonContainer} >
           <Button color={Colors.tabIconDefault} title="Click to stop call" onPress={onBackPress} />
@@ -190,5 +191,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     margin: 5,
+  },
+  bottomText: {
+    color: Colors.tabIconSelected,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginHorizontal: 10,
+    marginBottom: 10,
+    fontSize: 16
   }
 });

@@ -14,8 +14,7 @@ export default function StudentCourseDetailScreen({navigation, route}) {
     const [isLoading, setLoading] = useState(true);
     const [events, setEvents] = useState([]);
 
-    const removeTimeslot = async () => {
-        console.log("som tu");
+    const leaveTimeslot = async (timeslotId) => {
         try {
             const response = await fetch (`${Server.url}/courses/leave`, {
                 method: "POST",
@@ -23,14 +22,18 @@ export default function StudentCourseDetailScreen({navigation, route}) {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
                 },
-                body: JSON.stringify({timeslots: [{id: route.params.id}]})
+                body: JSON.stringify({timeslots: [{id: timeslotId}]})
 
             })
-            console.log(response.status);
-            if (response.status === 200) {
-                const json = await response.json();
-                console.log(json);
-                navigation.navigate("StudentCoursesScreen");
+            if (response.status === 204) {
+                setEvents(events.filter(ev => ev.timeslot.id !== timeslotId))
+            } else {
+                const json = await response.json()
+                let errors = ''
+                for (var key of Object.keys(json)) {
+                    errors = errors + `${json[key]}\n`
+                }
+                alert("Error", errors)
             }
 
         } catch (error) {
@@ -56,6 +59,19 @@ export default function StudentCourseDetailScreen({navigation, route}) {
             setLoading(false);
         }
     }
+    const showLeaveConfirmation = (event) => {
+        Alert.alert("Leave this timeslot?",
+          `${event.timeslot.weekDay}, ${event.title}`, [
+              {
+                  text: 'Confirm',
+                  onPress: () => leaveTimeslot(event.timeslot.id),
+              },
+              {
+                  text: 'Cancel',
+                  style: 'cancel',
+              },
+          ]);
+    }
 
     useEffect( () =>{
         fetchCourse()
@@ -66,30 +82,8 @@ export default function StudentCourseDetailScreen({navigation, route}) {
         navigation.navigate('JoinCallScreen', {roomId: `course${course.id}-student${userId.get()}`})
     }
 
-    const leaveCourse = () =>{
-        Alert.alert(
-            "Leaving course",
-            "Are you sure you want to leave course ?",
-            [
-                {
-                   text: "CANCEL",
-                    onPress: () => Alert.alert("Good choice :)"),
-                    style: "cancel"
-                },
-                {
-                    text: "OK",
-                    onPress: () => removeTimeslot(),
-
-                }
-            ],
-            {
-                cancelable: true,
-            }
-        );
-    }
-
     const goToMaterials = () =>{
-        console.log('m')
+        navigation.navigate('StudentMaterialsScreen', {courseId: course.id})
     }
 
     return (
@@ -97,17 +91,17 @@ export default function StudentCourseDetailScreen({navigation, route}) {
             <ScrollView keyboardShouldPersistTaps={"always"}>
                 {isLoading ? <ActivityIndicator/> : (
                     <>
-                        <CourseDescription course={course} onEventPress={null}
+                        <CourseDescription course={course} onEventPress={showLeaveConfirmation}
                                            events={events} setEvents={setEvents}/>
+                        <Text style={styles.bottomText}>Tap on a timeslot to leave it!</Text>
+                        <View style={styles.buttonsRow}>
+                            <SubmitButton text={"Materials"} buttonStyle={styles.button} onPress={goToMaterials}/>
+                        </View>
+                        <View style={styles.buttonsRow}>
+                            <SubmitButton text={"Join call with teacher"} buttonStyle={styles.button} onPress={callTeacher}/>
+                        </View>
                     </>
                 )}
-                <View style={styles.buttonsRow}>
-                    <SubmitButton text={"Leave Course"} buttonStyle={styles.button} onPress={leaveCourse}/>
-                    <SubmitButton text={"Materials"} buttonStyle={styles.button} onPress={goToMaterials}/>
-                </View>
-                <View style={styles.buttonsRow}>
-                    <SubmitButton text={"Call Teacher"} buttonStyle={styles.button} onPress={callTeacher}/>
-                </View>
             </ScrollView>
         </View>
     );
@@ -124,5 +118,13 @@ const styles = StyleSheet.create({
     },
     button: {
         minWidth: 150
+    },
+    bottomText: {
+        color: Colors.tabIconSelected,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        marginHorizontal: 10,
+        marginBottom: 10,
+        fontSize: 20
     }
 })

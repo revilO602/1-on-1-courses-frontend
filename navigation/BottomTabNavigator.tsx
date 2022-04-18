@@ -59,7 +59,6 @@ export default function BottomTabNavigator() {
                 component={TimetableScreen}
                 options={{
                     unmountOnBlur: true,
-                    headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome5 name="calendar-alt" size={24} color={color} />,
                     tabBarLabel: ({color, focused}) =>
                         <Text style={[styles.text, focused ? styles.textfocused : styles.textunfocused]}>Timetable</Text>,

@@ -1,19 +1,20 @@
 import TimeTableView, {genTimeBlock} from "react-native-timetable";
 import React, { useEffect, useState } from 'react';
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, ScrollView, StyleSheet} from "react-native";
 import Colors from "../constants/Colors";
 import { encode } from "base-64";
 import {email, password} from "../store/state";
 import Server from "../constants/Server";
+import {WEEK_DAYS} from "../constants/Weekdays";
 
 
 export default function TimetableScreen() {
-    const [gotTimeslots, setTimeslots] = useState<any []>([]);
+    const [events, setEvents] = useState([])
+    const [isLoading, setLoading] = useState(true);
 
     const fetchData = async () => {
         try {
             const response = await fetch(`${Server.url}/timetable`, {
-                //method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic ' + encode(`${email.get()}:${password.get()}`),
@@ -22,54 +23,65 @@ export default function TimetableScreen() {
                 });
                 if (response.status === 200) {
                     const json = await response.json();
-
-                    modifyData(json.teacherTimeslots[0], json.studentTimeslots[0]);
+                    console.log(json)
+                    createEvents(json.teacherTimeslots, json.studentTimeslots);
 
                 } else {
                     alert("Invalid credentials")
                 }
         } catch (error) {
             alert(JSON.stringify(error));
+        } finally {
+            setLoading(false)
         }
     }
 
-    const modifyData = (teacher: any, student: any) => {
-        const arr = [];
-        if (teacher != undefined) {
-            console.log(teacher);
-            arr.push(...teacher.map((timeslot: any) => {
-                const time = timeslot.startTime;
-                const weekday = timeslot.weekDay.substring(0, 3).toUpperCase();
-                const endHour = parseInt(time) + 1
-
-                return {
-                    title: `${time.substring(0, 2)} - ${endHour.toString()}`,
-                    startTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2))}`),
-                    endTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2)) + 1}`, 50),
-                    extra_descriptions: ["Teaching"],
-                    location: "App",
-                }
-            }));
+    const createEvent = (timeslot) =>{
+        console.log(timeslot)
+        const startTime = timeslot.startTime.split(':');
+        const startHour = parseInt(startTime[0])
+        const startMinute = parseInt(startTime[1])
+        const startDayShort = timeslot.weekDay.substring(0,3).toUpperCase();
+        let endHour
+        let endDayShort
+        if (startHour === 23){
+            endHour = 0
+            if(startDayShort === "SUN"){
+                endDayShort=WEEK_DAYS[0].short
+            }
+            else {
+                endDayShort = WEEK_DAYS[WEEK_DAYS.findIndex(day => day.short === startDayShort)+1].short
+            }
         }
-
-        if (student != undefined) {
-            console.log(student);
-            arr.push(...student.map((timeslot: any) => {
-                    const time = timeslot.startTime;
-                    const weekday = timeslot.weekDay.substring(0, 3).toUpperCase();
-                    const endHour = parseInt(time) + 1
-
-                    return {
-                        title: `${time.substring(0, 2)} - ${endHour.toString()}`,
-                        startTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2))}`),
-                        endTime: genTimeBlock(`${weekday.substring(0, 3).toUpperCase()}`, `${parseInt(time.substring(0, 2)) + 1}`, 50),
-                        extra_descriptions: ["Schooling"],
-                        location: "App",
-                    }
-                }));
+        else{
+            endHour = startHour + 1
+            endDayShort = startDayShort
         }
+        return  {
+            title: `${startHour.toString()}:${startMinute.toString().padStart(2, '0')}`,
+            startTime: genTimeBlock(startDayShort, startHour, startMinute),
+            endTime:  genTimeBlock(endDayShort, endHour, startMinute),
+        }
+    }
 
-        setTimeslots(arr);
+    const createEvents = (teacherTimeslots, studentTimeslots) => {
+        let localEvents = []
+        teacherTimeslots.forEach((timeslot)=>{
+            let event = createEvent(timeslot)
+            event["location"] = `${timeslot.course.name}`
+            event["extra_descriptions"] = ["Teaching"]
+            if (timeslot.student != null){
+                event["extra_descriptions"].push(`${timeslot.student.firstName[0]}.${timeslot.student.lastName}`)
+            }
+            localEvents.push(event)
+        })
+        studentTimeslots.forEach((timeslot)=>{
+            let event = createEvent(timeslot)
+            event["extra_descriptions"] = ["Learning"]
+            event["location"] = `${timeslot.course.name}`
+            localEvents.push(event)
+        })
+        setEvents(localEvents);
     }
 
     useEffect( ()  => {
@@ -78,14 +90,16 @@ export default function TimetableScreen() {
 
     return (
         <ScrollView contentContainerStyle={{backgroundColor: Colors.background, margin: 5}}>
-            <TimeTableView
-                events={gotTimeslots}
+            {isLoading ? <ActivityIndicator/> : (
+              <TimeTableView
+                events={events}
                 pivotTime={0}
                 pivotEndTime={24}
                 numberOfDays={7}
                 formatDateHeader="ddd"
                 headerStyle = {styles.headerStyle}
                 locale="en-US"/>
+            )}
         </ScrollView>
     );
 };
