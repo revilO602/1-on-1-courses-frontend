@@ -39,8 +39,17 @@ export default function EditCourseScreen({navigation, route}) {
           'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
         }),
       });
-      const json = await response.json()
-      setCategories(json)
+      if (response.status === 200){
+        const json = await response.json()
+        setCategories(json)
+      } else {
+        const json = await response.json()
+        let errors = ''
+        for (var key of Object.keys(json)) {
+          errors = errors + `${json[key]}\n`
+        }
+        alert("Error", errors)
+      }
     } catch (error) {
       alert("Server error", "SERVER ERROR");
     }

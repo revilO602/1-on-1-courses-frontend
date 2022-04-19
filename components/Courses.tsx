@@ -21,6 +21,13 @@ export default function Courses({ navigation, props }) {
             if(response.status === 200) {
                 const json = await response.json();
                 setCourses(json);
+            } else {
+                const json = await response.json()
+                let errors = ''
+                for (var key of Object.keys(json)) {
+                    errors = errors + `${json[key]}\n`
+                }
+                alert("Error", errors)
             }
         } catch (error) {
             console.error(error);

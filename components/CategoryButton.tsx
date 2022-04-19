@@ -4,7 +4,6 @@ import Colors from "../constants/Colors";
 export default function CategoryButton({ navigation, name, id }) {
     const onPress = () => {
         navigation.navigate('CoursesScreen', { name: name, id: id})
-        //navigation.setOptions()
     }
 
     return (

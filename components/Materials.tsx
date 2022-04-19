@@ -22,6 +22,13 @@ export default function Materials({ courseId }) {
         const json = await response.json();
         console.log(json)
         setMaterials(json);
+      } else {
+        const json = await response.json()
+        let errors = ''
+        for (var key of Object.keys(json)) {
+          errors = errors + `${json[key]}\n`
+        }
+        alert("Error", errors)
       }
     } catch (error) {
       console.error(error);
