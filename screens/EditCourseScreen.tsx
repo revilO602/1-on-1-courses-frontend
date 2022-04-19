@@ -94,7 +94,7 @@ export default function EditCourseScreen({navigation, route}) {
           startTime: `${hour.toString()}:${minute.toString().padStart(2, '0')}`
         })
       });
-      if (response.status === 200){
+      if (response.status === 201){
         let json = await response.json()
         let endHour
         let endDay

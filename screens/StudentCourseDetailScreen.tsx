@@ -22,7 +22,7 @@ export default function StudentCourseDetailScreen({navigation, route}) {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
                 },
-                body: JSON.stringify({timeslots: [{id: timeslotId}]})
+                body: JSON.stringify([{id: timeslotId}])
 
             })
             if (response.status === 204) {

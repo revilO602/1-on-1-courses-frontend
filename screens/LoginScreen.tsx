@@ -35,12 +35,10 @@ export default function LoginScreen({navigation}){
   const sendForm = async (data) => {
     try {
       const response = await fetch(`${Server.url}/users/login`,{
-        method: "POST",
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Basic '+ encode(`${data.email}:${data.password}`),
         },
-        body: JSON.stringify(data)
       });
       if (response.status === 200) {
         const json = await response.json()
