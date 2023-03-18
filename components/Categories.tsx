@@ -3,6 +3,8 @@ import {useEffect, useState} from "react";
 import Server from "../constants/Server";
 import { encode } from "base-64";
 import CategoryButton from "./CategoryButton";
+import { email, password} from "../store/state";
+import alert from "./alert";
 
 export default function Categories({ navigation }) {
     const [isLoading, setLoading] = useState(true);
@@ -12,11 +14,20 @@ export default function Categories({ navigation }) {
         try {
             const response = await fetch(`${Server.url}/courses/categories`,{
                 headers: new Headers({
-                    'Authorization': 'Basic '+ encode('teacher1@login.sk:heslo'),
+                    'Authorization': 'Basic '+ encode(`${email.get()}:${password.get()}`),
                 }),
             });
-            const json = await response.json();
-            setCategories(json);
+            if (response.status === 200){
+                const json = await response.json();
+                setCategories(json);
+            } else {
+                const json = await response.json()
+                let errors = ''
+                for (var key of Object.keys(json)) {
+                    errors = errors + `${json[key]}\n`
+                }
+                alert("Error", errors)
+            }
         } catch (error) {
             console.error(error);
         } finally {

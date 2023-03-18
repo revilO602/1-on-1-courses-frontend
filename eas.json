@@ -1,6 +1,10 @@
 {
   "cli": {
+<<<<<<< HEAD
     "version": ">= 0.48.2"
+=======
+    "version": ">= 0.50.0"
+>>>>>>> bae05b01273a18d9ff3d3791886fe683d8285e4b
   },
   "build": {
     "development": {

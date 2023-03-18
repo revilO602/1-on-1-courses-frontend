@@ -1,16 +1,17 @@
-import {View, StyleSheet, Text, Pressable,} from "react-native";
+import {StyleSheet, Text, Pressable,} from "react-native";
 import Colors from "../constants/Colors";
 
-export default function SubmitButton({ onPress, text, style }) {
+export default function SubmitButton({ onPress, text, buttonStyle=null, textStyle=null }) {
     return (
         <Pressable style={({ pressed }) => [
             {
                 backgroundColor: pressed ? Colors.tabIconSelected : Colors.primary,
             },
             styles.button,
+            buttonStyle
         ]}
                    onPress={onPress} >
-            <Text style={[...style, styles.text]}>{text}</Text>
+            <Text style={[styles.text, textStyle]}>{text}</Text>
         </Pressable>
     );
 }
@@ -18,7 +19,6 @@ export default function SubmitButton({ onPress, text, style }) {
 const styles = StyleSheet.create({
     button: {
         marginVertical: 5,
-        marginHorizontal: "20%",
         paddingVertical: 15,
         paddingHorizontal: 5,
         alignItems: 'center',

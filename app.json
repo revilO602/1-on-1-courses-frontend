@@ -23,7 +23,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "io.expo.client",
+      "package": "com.one_on_one_courses",
       "softwareKeyboardLayoutMode": "pan"
     }
   }

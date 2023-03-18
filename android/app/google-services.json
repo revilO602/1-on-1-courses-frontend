@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "484026413058",
+    "project_id": "one-on-one-courses-webrtc",
+    "storage_bucket": "one-on-one-courses-webrtc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484026413058:android:81c3e37bcccee48fedf71b",
+        "android_client_info": {
+          "package_name": "com.one_on_one_courses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484026413058-hcqd65b1vshigtrnndoh2si6u9u45oie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFxE9YgmgSj5DzdUCWiCuKU50SsT1a3Mo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484026413058-hcqd65b1vshigtrnndoh2si6u9u45oie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

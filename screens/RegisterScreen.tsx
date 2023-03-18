@@ -1,19 +1,16 @@
 import * as React from 'react';
 import {
     Text,
-    View,
     StyleSheet,
-    Button,
-    Alert,
-    ScrollView, TextInput, Pressable, KeyboardAvoidingView, Platform,
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import Colors from "../constants/Colors";
 import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
-import { useHeaderHeight } from '@react-navigation/elements';
+import Server from "../constants/Server";
+import alert from "../components/alert";
+
 type FormData = {
     firstName: string;
     lastName: string;
@@ -22,22 +19,47 @@ type FormData = {
     confirmPassword: string;
 };
 
-export default function RegisterScreen(){
-    const insets = useSafeAreaInsets();
-
-    const headerHeight = useHeaderHeight();
+export default function RegisterScreen({navigation}){
     const {
         control,
         handleSubmit,
-        formState: {errors, isValid}
+        formState: {errors, isValid},
+        watch
     } = useForm({mode: 'onBlur'})
+    const currPassword = watch('password')
 
-    const onSubmit = (data: FormData) => console.log(data)
+    const onSubmit = (data: FormData) => {
+        console.log(data)
+        sendForm(data)
+    }
+
+    const sendForm = async (data) => {
+        try {
+            const response = await fetch(`${Server.url}/users/register`,{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            if (response.status === 201) {
+                navigation.navigate("LoginScreen")
+            } else {
+                const json = await response.json()
+                let errors = ''
+                for (var key of Object.keys(json)) {
+                    errors = errors + `${key}: ${json[key]}\n`
+                }
+                alert("Error", errors)
+            }
+        } catch (error) {
+            alert("Server error", "SERVER ERROR");        }
+    }
     return (
-            <KeyboardAwareScrollView
-                contentContainerStyle={[styles.container, {paddingTop: insets.top}]}
-            enableOnAndroid
+            <SafeAreaView
+              style={styles.container}
             >
+                <Text style={[styles.text, styles.heading]}>Register</Text>
                 <Controller
                     control={control}
                     name="firstName"
@@ -47,9 +69,17 @@ export default function RegisterScreen(){
                             label={"First name"}
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"firstName"}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "First name is required"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -60,9 +90,17 @@ export default function RegisterScreen(){
                             placeholder="Enter last name..."
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"lastName"}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Last name is required"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -73,9 +111,21 @@ export default function RegisterScreen(){
                             placeholder="Enter email..."
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"email"}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Email is required"
+                        },
+                        pattern: {
+                            value: /^(.+)@(.+)$/,
+                            message: "Invalid email format"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -87,9 +137,17 @@ export default function RegisterScreen(){
                             secureTextEntry={true}
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"password"}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Password is required"
+                        }
+                    }}
                 />
                 <Controller
                     control={control}
@@ -101,12 +159,22 @@ export default function RegisterScreen(){
                             secureTextEntry={true}
                             value={value}
                             onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
+                            onChangeText={(value: any) => onChange(value)}
+                            errors={errors}
+                            name={"confirmPassword"}
                         />
                     )}
+                    rules={{
+                        required: {
+                            value: true,
+                            message: "Password confirmation is required"
+                        },
+                        validate: value => value === currPassword || "The passwords do not match"
+                    }}
+
                 />
-                <SubmitButton text={"Register"} style={[styles.button]} onPress={handleSubmit(onSubmit)}/>
-            </KeyboardAwareScrollView>
+                <SubmitButton buttonStyle={{marginHorizontal: 50}} text={"Submit"} onPress={handleSubmit(onSubmit)}/>
+            </SafeAreaView>
     );
 };
 
@@ -121,6 +189,15 @@ const styles = StyleSheet.create({
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
+        color: Colors.text,
+    },
+    heading: {
+        lineHeight: 50,
+        fontSize: 40,
+        textAlign: "center",
+        paddingBottom: 5
+    },
+    button: {
         color: Colors.text,
     }
 });
