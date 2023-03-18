@@ -25,7 +25,8 @@
     "react-native-screens": "^3.13.1",
     "react-native-web": "0.17.1",
     "react-native-webrtc": "^1.98.0",
-    "expo-splash-screen": "~0.14.1"
+    "expo-splash-screen": "~0.14.1",
+    "expo-dev-client": "~0.8.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
